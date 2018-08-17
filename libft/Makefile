@@ -80,6 +80,7 @@ SRC = 	ft_atoi.c\
 		ft_strtrim.c\
 		ft_swap.c\
 		ft_tolower.c\
+		ft_count_words.c\
 		ft_toupper.c\
 		ft_num_len.c\
 		ft_pow.c\

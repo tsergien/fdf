@@ -99,5 +99,6 @@ char				*ft_strjoin_free_one(char **s1, char const *s2);
 int					ft_num_len(unsigned long n, size_t base);
 int					ft_pow(int base, int n);
 char				*ft_itoa_base(unsigned long value, size_t base);
+int					count_words(char *line);
 
 #endif

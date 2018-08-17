@@ -12,7 +12,7 @@
 
 NAME = fdf
 
-SRC_FILES = main.c
+SRC_FILES = main.c reading.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -40,7 +40,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C $(LIB_DIR)
-	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME)
+	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
 	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
@@ -54,7 +54,7 @@ clean:
 
 fclean: clean
 	@make fclean -C $(LIB_DIR)
-	@rm $(NAME)
+	@rm -f $(NAME)
 	@echo "$(COLOR)***		crystall clean		***$(RESET_COLOR)"
 
 norm:
