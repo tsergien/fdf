@@ -28,7 +28,7 @@ HEADER = -I /usr/local/include -I includes/
 
 FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit
 
-WWW = -Wall -Wextra -Werror
+WWW = -Wall -Wextra -Werror -g # -g remove
 
 LIB_DIR = libft/
 
@@ -38,14 +38,19 @@ RESET_COLOR = \033[0m
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME):
 	@make -C $(LIB_DIR)
-	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
+	@cc $(WWW) $(SRC) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
 	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@mkdir -p obj
-	@gcc $(WWW) -o $@ -c $< $(HEADER)
+# $(NAME): $(OBJ)
+# 	@make -C $(LIB_DIR)
+# 	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
+# 	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
+
+# $(OBJ_DIR)%.o: $(SRC_DIR)%.c
+# 	@mkdir -p obj
+# 	@gcc $(WWW) -o $@ -c $< $(HEADER)
 
 clean:
 	@make clean -C $(LIB_DIR)

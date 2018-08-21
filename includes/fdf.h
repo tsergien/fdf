@@ -33,10 +33,12 @@ typedef struct		s_dot
 	int				x;
 	int				y;
 }					t_dot;
-
+/*
+**		for matrix t_dot is: x->[height], y->[color]
+*/
 typedef struct		s_matrix
 {
-	int				**m;
+	t_dot			**m;
 	int				rows;
 	int				cols;
 }					t_matrix;

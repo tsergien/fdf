@@ -30,31 +30,50 @@ void				add_lines(t_lines **l, char *line)
 	tmp->next->next = NULL;
 }
 
-static t_matrix		*char_to_int(t_lines *l, int lines)
+static void			set_matrix_elem(t_matrix *m, char *line, int j)
 {
-	t_matrix*m;
 	char	**c;
-	int		i;
-	int		j;
 	int		k;
+	int		i;
+	char	*ptr;
 
+	c = ft_strsplit(line, ' ');
+	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * (m->cols));
+	i = -1;
+	while (c[++i])
+	{
+		ptr = ft_strchr(c[i], ',');
+		if (ptr && *(ptr + 1) != ' ')
+			m->m[j][i].y = ft_atoi_base(++ptr, 16);
+		else
+			m->m[j][i].y = 0xffffff;
+		m->m[j][i].x = ft_atoi(c[i]);
+	}
+	k = -1;
+	while (c[++k])
+		free(c[k]);
+}
+
+static t_matrix		*lines_to_matrix(t_lines *l, int lines)
+{
+	t_matrix	*m;
+	int			j;
+	t_lines		*tmp;
+	
 	m = (t_matrix *)malloc(sizeof(t_matrix));
 	m->rows = lines;
 	if (l)
 		m->cols = count_words(l->data);
-	m->m = (int **)malloc(sizeof(int *) * (lines));
-	j = -1;
+	m->m = (t_dot **)malloc(sizeof(t_dot *) * (lines));
+	j = 0;
 	while (l)
 	{
-		c = ft_strsplit(l->data, ' ');
-		m->m[++j] = (int *)malloc(sizeof(int) * (m->cols));
-		i = -1;
-		while (c[++i])
-			m->m[j][i] = ft_atoi(c[i]);
-		l = l->next;
-		k = -1;
-		while (c[++k])
-			free(c[k]);
+		set_matrix_elem(m, l->data, j);
+		tmp = l->next;
+		free(l->data);
+		free(l);
+		l = tmp;
+		j++;
 	}
 	return (m);
 }
@@ -73,5 +92,5 @@ t_matrix			*get_matrix(int fd)
 		free(line);
 		j++;
 	}
-	return (char_to_int(l, j));
+	return (lines_to_matrix(l, j));
 }

@@ -85,6 +85,7 @@ SRC = 	ft_atoi.c\
 		ft_num_len.c\
 		ft_pow.c\
 		ft_itoa_base.c\
+		ft_atoi_base.c\
 		get_next_line.c\
 
 

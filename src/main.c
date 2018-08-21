@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//before defence:
+// system leaks
+// flag -g from Makefile
+
 #include "../includes/fdf.h"
 #include <stdio.h>////////////
 int		deal_key(int key, void *param)
@@ -57,7 +61,8 @@ static void	usage()
 {
 	write(1, "Usage: ./fdf file\n", 18);
 }
-
+// print net with 0 radians
+// look up for rotating formulas
 int		main(int argc, char **argv)
 {
 	t_ptrs			*p;
@@ -79,7 +84,7 @@ int		main(int argc, char **argv)
 	{
 		j = -1;
 		while (++j < m->cols)
-			printf("%3d  |", m->m[i][j]);
+			printf("%3d,%#5x | ", m->m[i][j].x, m->m[i][j].y);
 		printf("\n");
 	}
 
@@ -94,5 +99,6 @@ int		main(int argc, char **argv)
 	// mlx_hook(p->win_ptr, 2, 5, deal_key, (void *)0);
 	// mlx_hook(p->win_ptr, 17, 1L << 17, exit_x, (void *)0);
 	// mlx_loop(p->mlx_ptr);
+	// system("leaks fdf -quiet");
 	return (0);
 }
