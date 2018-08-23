@@ -15,7 +15,7 @@
 // flag -g from Makefile
 
 #include "../includes/fdf.h"
-#include <stdio.h>////////////
+
 int		deal_key(int key, void *param)
 {
 	param = 0;
@@ -29,32 +29,6 @@ int		exit_x(void *par)
 	par = NULL;
 	exit(1);
 	return (0);
-}
-
-void	put_line(t_ptrs *p, t_dot *o1, t_dot *o2)
-{
-	int		dx;
-	int		dy;
-	int		D;
-	t_dot	i;
-
-	dx = o2->x - o1->x;
-	dy = o2->y - o1->y;
-	D = 2 * dy - dx;
-	i.y= o1->y;
-	i.x = o1->x - 1;
-	p->color = 0x72d8b3;
-	while (++i.x < o2->x)
-	{
-		mlx_pixel_put(p->mlx_ptr, p->win_ptr, i.x, i.y, p->color);
-		if (D > 0)
-		{
-			i.y = i.y + 1;
-			D = D - 2 * dx;
-		}
-		else
-			D = D + 2 * dy;
-	}
 }
 
 static void	usage()
@@ -76,29 +50,42 @@ int		main(int argc, char **argv)
 		return (0);
 	}	
 	p = (t_ptrs *)malloc(sizeof(t_ptrs));
-	// p->mlx_ptr = mlx_init();
-	// p->win_ptr = mlx_new_window(p->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "FDF");
+	p->mlx_ptr = mlx_init();
+	p->win_ptr = mlx_new_window(p->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "FDF");
+
+
 	m = get_matrix(fd);
-	int i = -1, j = -1;
-	while (++i < m->rows)
+/* Matrix printing :)
+	// int i = -1, j = -1;
+	// while (++i < m->rows)
+	// {
+	// 	j = -1;
+	// 	while (++j < m->cols)
+	// 		printf("%3d,%5x | ", m->m[i][j].x, m->m[i][j].y);
+	// 	printf("\n");
+	// }
+*/
+
+	t_dot o1, o2;
+	o1.x = 10;
+	o1.y = 10;
+	o2.x = WIN_WIDTH - 100;
+	o2.y = WIN_HEIGHT - 100;
+	p->color = 0xedaaed;
+	for (int i = 0; i < WIN_WIDTH; i = i + 50)
 	{
-		j = -1;
-		while (++j < m->cols)
-			printf("%3d,%#5x | ", m->m[i][j].x, m->m[i][j].y);
-		printf("\n");
+		o1.x = i;
+		//line_wu(p, o2, o1);
+		darken(&(p->color), 0.5);
+		if (i % 400 == 0)
+			p->color = 0xedaaed;
+		put_line(p, o1, o2);	
 	}
+	draw_grid(p, m);
 
-	// mlx_pixel_put(p->mlx_ptr, p->win_ptr, 250, 250, 0xFFFFFF);
-	// t_dot o1, o2;
-	// o1.x = 5;
-	// o1.y = 10;
-	// o2.x = 800;
-	// o2.y = 800;
-	// put_line(p, &o1, &o2);
-
-	// mlx_hook(p->win_ptr, 2, 5, deal_key, (void *)0);
-	// mlx_hook(p->win_ptr, 17, 1L << 17, exit_x, (void *)0);
-	// mlx_loop(p->mlx_ptr);
+	mlx_hook(p->win_ptr, 2, 5, deal_key, (void *)0);//escape button
+	mlx_hook(p->win_ptr, 17, 1L << 17, exit_x, (void *)0);//exit with x
+	mlx_loop(p->mlx_ptr);
 	// system("leaks fdf -quiet");
 	return (0);
 }

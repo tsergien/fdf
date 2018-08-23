@@ -44,9 +44,9 @@ static void			set_matrix_elem(t_matrix *m, char *line, int j)
 	{
 		ptr = ft_strchr(c[i], ',');
 		if (ptr && *(ptr + 1) != ' ')
-			m->m[j][i].y = ft_atoi_base(++ptr, 16);
+			m->m[j][i].y = ft_atoi_base((ptr + 1), 16);
 		else
-			m->m[j][i].y = 0xffffff;
+			m->m[j][i].y = 16777215;
 		m->m[j][i].x = ft_atoi(c[i]);
 	}
 	k = -1;
