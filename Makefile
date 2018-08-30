@@ -12,7 +12,7 @@
 
 NAME = fdf
 
-SRC_FILES = main.c reading.c wu_line.c grid.c
+SRC_FILES = main.c reading.c wu_line.c grid.c wu_additional.c rotate.c keys.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -26,9 +26,9 @@ OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
 HEADER = -I /usr/local/include -I includes/
 
-FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit
+FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit -lm#-lm
 
-WWW = -Wall -Wextra -Werror -g # -g remove
+WWW = -Wall -Wextra -Werror #-g # -g remove
 
 LIB_DIR = libft/
 
@@ -38,24 +38,24 @@ RESET_COLOR = \033[0m
 
 all: $(NAME)
 
-$(NAME):
-	@make -C $(LIB_DIR)
-	@cc $(WWW) $(SRC) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
-	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
-
-# $(NAME): $(OBJ)
+# $(NAME):
 # 	@make -C $(LIB_DIR)
-# 	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
+# 	@cc $(WWW) $(SRC) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
 # 	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
 
-# $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-# 	@mkdir -p obj
-# 	@gcc $(WWW) -o $@ -c $< $(HEADER)
+$(NAME): $(OBJ)
+	@make -C $(LIB_DIR)
+	@cc $(OBJ) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
+	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	@mkdir -p obj
+	@gcc $(WWW) -o $@ -c $< $(HEADER)
 
 clean:
 	@make clean -C $(LIB_DIR)
 	@rm -rf $(OBJ_DIR)
-	@echo "$(COLOR)***		obj cleaned			***$(RESET_COLOR)"
+	@echo "$(COLOR)***		obj cleaned		***$(RESET_COLOR)"
 
 fclean: clean
 	@make fclean -C $(LIB_DIR)

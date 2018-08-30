@@ -12,8 +12,40 @@
 
 #include "../includes/fdf.h"
 
-void		draw_grid(t_ptrs *p, t_matrix *m)
+static void	connect_next(t_ptrs *p, t_matrix *m, int i, int j)
 {
-	p = 0;
-	m = 0;
+	t_dotd	start;
+	t_dotd	cur;
+	t_dotd	next;
+
+	start.x = WIN_WIDTH / 2 - m->cols / 2 * m->scale;
+	start.y = WIN_HEIGHT / 2 - m->rows / 2 * m->scale;
+	cur.x = start.x + (double)m->scale * m->rot_m[i][j].x;
+	cur.y = start.y + (double)m->scale * m->rot_m[i][j].y;
+	if (j + 1 < m->cols)// next to the right
+	{
+		next.x = start.x + (double)m->scale * m->rot_m[i][j + 1].x;
+		next.y = start.y + (double)m->scale * m->rot_m[i][j + 1].y;
+		line_wu(p, cur, next);
+	}
+	if (i + 1 < m->rows)// next down
+	{
+		next.x = start.x + (double)m->scale * m->rot_m[i + 1][j].x;
+		next.y = start.y + (double)m->scale * m->rot_m[i + 1][j].y;
+		line_wu(p, cur, next);
+	}
+}
+
+void		my_draw(t_fdf *f)
+{
+	int		i;
+	int		j;
+
+	i = -1;
+	while (++i < f->m->rows)
+	{
+		j = -1;
+		while (++j < f->m->cols)
+			connect_next(f->p, f->m, i, j);
+	}
 }

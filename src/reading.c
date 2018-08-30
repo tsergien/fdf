@@ -38,7 +38,7 @@ static void			set_matrix_elem(t_matrix *m, char *line, int j)
 	char	*ptr;
 
 	c = ft_strsplit(line, ' ');
-	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * (m->cols));
+	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * m->cols);
 	i = -1;
 	while (c[++i])
 	{
@@ -54,6 +54,26 @@ static void			set_matrix_elem(t_matrix *m, char *line, int j)
 		free(c[k]);
 }
 
+static void			set_rot_matrix(t_matrix **m)
+{
+	int			i;
+	int			j;
+
+	i = -1;
+	(*m)->rot_m = (t_vector **)malloc(sizeof(t_vector *) * (*m)->rows);
+	while (++i < (*m)->rows)
+	{
+		j = -1;
+		(*m)->rot_m[i] = (t_vector *)malloc(sizeof(t_vector) * (*m)->cols);
+		while (++j < (*m)->cols)
+		{
+			(*m)->rot_m[i][j].x = j;
+			(*m)->rot_m[i][j].y = i;
+			(*m)->rot_m[i][j].z = (*m)->m[i][j].x;
+		}
+	}
+}
+
 static t_matrix		*lines_to_matrix(t_lines *l, int lines)
 {
 	t_matrix	*m;
@@ -64,7 +84,7 @@ static t_matrix		*lines_to_matrix(t_lines *l, int lines)
 	m->rows = lines;
 	if (l)
 		m->cols = count_words(l->data);
-	m->m = (t_dot **)malloc(sizeof(t_dot *) * (lines));
+	m->m = (t_dot **)malloc(sizeof(t_dot *) * lines);
 	j = 0;
 	while (l)
 	{
@@ -75,6 +95,8 @@ static t_matrix		*lines_to_matrix(t_lines *l, int lines)
 		l = tmp;
 		j++;
 	}
+	m->scale = (fmin(WIN_HEIGHT, WIN_WIDTH) - fmin(WIN_HEIGHT, WIN_WIDTH)
+				/ 8) /  fmax(m->cols, m->rows);
 	return (m);
 }
 
@@ -83,14 +105,19 @@ t_matrix			*get_matrix(int fd)
 	t_lines	*l;
 	char	*line;
 	int		j;
+	t_matrix*m;
 
 	j = 0;
 	l = NULL;
 	while (get_next_line(fd, &line) > 0)
 	{
+		if (ft_strlen(line) == 0)// or check if this line is valid at all
+			break ;
 		add_lines(&l, line);
 		free(line);
 		j++;
 	}
-	return (lines_to_matrix(l, j));
+	m = lines_to_matrix(l, j);
+	set_rot_matrix(&m);
+	return (m);
 }

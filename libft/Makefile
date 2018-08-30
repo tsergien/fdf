@@ -15,6 +15,7 @@ NAME = libft.a
 HEADER = includes/
 
 SRC = 	ft_atoi.c\
+		ft_abs.c\
 		ft_bzero.c\
 		ft_isalnum.c\
 		ft_isalpha.c\

@@ -101,5 +101,6 @@ int					ft_pow(int base, int n);
 char				*ft_itoa_base(unsigned long value, size_t base);
 int					count_words(char *line);
 int					ft_atoi_base(const char *s, int base);
+int					ft_abs(int x);
 
 #endif

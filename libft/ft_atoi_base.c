@@ -14,7 +14,9 @@
 
 static int	get_base(char c)
 {
-	if (c == 'a' || c == 'A')
+	if (c >= '0' && c <= '9')
+		return (c - '0');
+	else if (c == 'a' || c == 'A')
 		return (10);
 	else if (c == 'b' || c == 'B')
 		return (11);
@@ -50,7 +52,7 @@ int			ft_atoi_base(const char *s, int base)
 			|| (*s >= 'A' && *s <= 'F'))
 	{
 		old = result;
-		result = result * base + get_base(*(s++)) - '0';
+		result = result * base + get_base(*(s++));
 		if (ABS(old) > ABS(result))
 			return (negative ? 0 : -1);
 	}
