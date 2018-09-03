@@ -18,8 +18,8 @@ static void	connect_next(t_ptrs *p, t_matrix *m, int i, int j)
 	t_dotd	cur;
 	t_dotd	next;
 
-	start.x = WIN_WIDTH / 2 - m->cols / 2 * m->scale;
-	start.y = WIN_HEIGHT / 2 - m->rows / 2 * m->scale;
+	start.x = WIN_WIDTH / 2 - m->rot_m[m->cols / 2][m->cols / 2].x / 2 * m->scale;
+	start.y = WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->rows / 2].y / 2 * m->scale;
 	cur.x = start.x + (double)m->scale * m->rot_m[i][j].x;
 	cur.y = start.y + (double)m->scale * m->rot_m[i][j].y;
 	if (j + 1 < m->cols)// next to the right
@@ -48,4 +48,5 @@ void		my_draw(t_fdf *f)
 		while (++j < f->m->cols)
 			connect_next(f->p, f->m, i, j);
 	}
+	mlx_put_image_to_window(f->p->mlx_ptr, f->p->win_ptr, f->p->img_ptr, 0, 0);////////
 }

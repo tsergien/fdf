@@ -42,11 +42,10 @@ void			darken(int *col, double c)
 void			my_plot(t_ptrs *p, int x, int y, double c)
 {
 	int		color;
-	double	i;
 	
 	c = 1 - c;
-	i = c;
 	color = p->color;
 	darken(&color, c);
-	mlx_pixel_put(p->mlx_ptr, p->win_ptr, x, y, color);
+	if (x + WIN_WIDTH * y < WW)
+		p->img[x + WIN_WIDTH * y] = color;
 }

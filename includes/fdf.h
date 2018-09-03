@@ -20,6 +20,7 @@
 # include "../libft/includes/get_next_line.h"
 # define WIN_WIDTH 1800
 # define WIN_HEIGHT 1100
+# define WW (WIN_HEIGHT * WIN_WIDTH)
 # include <stdio.h>//////////////
 # define GREY_BLUE 0x667793
 # define L_PURPLE 0xa17bc6
@@ -52,6 +53,8 @@ typedef struct		s_ptrs
 {
 	void			*win_ptr;
 	void			*mlx_ptr;
+	void			*img_ptr;
+	int				*img;
 	int				color;
 }					t_ptrs;
 
@@ -82,7 +85,8 @@ typedef struct		s_matrix
 	t_vector		**rot_m;
 	int				rows;
 	int				cols;
-	int				scale;
+	t_vector		angle;
+	double			scale;
 }					t_matrix;
 
 typedef struct		s_lines
@@ -117,6 +121,7 @@ void				my_draw(t_fdf *f);
 **		ROTATING
 */
 void				rotate(t_matrix *m, t_vector angle);
+void				rotate_to_start(t_matrix *m);
 /*
 **		KEYS
 */

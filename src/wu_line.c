@@ -23,18 +23,18 @@ static int		equal_coords(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
 		i = (a->y < b->y ? a->y : b->y) - 1;
 		y1 = a->y > b->y ? a->y : b->y;
 		while (++i <= y1)
-			mlx_pixel_put(p->mlx_ptr, p->win_ptr, a->x, i, p->color);
+			if ((int)a->x + (int)i * WIN_WIDTH < WW)
+				p->img[(int)a->x + (int)i * WIN_WIDTH] = p->color;
 	}
 	else if (a->y == b->y)
 	{
 		i = a->x - 1;
 		while (++i <= b->x)
 		{
-			if (steep)
-				mlx_pixel_put(p->mlx_ptr, p->win_ptr, a->y, i, p->color);
-			else
-				mlx_pixel_put(p->mlx_ptr, p->win_ptr, i, a->y, p->color);
-
+			if (steep && (int)a->y + (int)i * WIN_WIDTH < WW)
+				p->img[(int)a->y + (int)i * WIN_WIDTH] = p->color;
+			else if ((int)i + (int)a->y * WIN_WIDTH < WW)
+				p->img[(int)i + (int)a->y * WIN_WIDTH] = p->color;
 		}
 	}
 	return (i == -1 ? 0 : 1);
@@ -52,7 +52,7 @@ static int		xxyy(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
 	return (equal_coords(p, a, b, steep));
 }
 
-static t_dotd	handle_dot_start(t_ptrs *p, t_dotd *o, double gradient, double *intery, int steep)/////////////5 vars
+static t_dotd	handle_dot_start(t_ptrs *p, t_dotd *o, t_dotd *ig, int steep)
 {
 	double	xend;
 	double	yend;
@@ -60,7 +60,7 @@ static t_dotd	handle_dot_start(t_ptrs *p, t_dotd *o, double gradient, double *in
 	t_dotd	pxl;
 
 	xend = my_round(o->x);
-	yend = o->y + gradient * (xend - o->x);
+	yend = o->y + ig->y * (xend - o->x);
 	xgap = 1 - my_fpart(o->x + 0.5);
 	pxl.x = xend;
 	pxl.y = (int)(yend + 0.5);
@@ -74,7 +74,7 @@ static t_dotd	handle_dot_start(t_ptrs *p, t_dotd *o, double gradient, double *in
 		my_plot(p, pxl.x, pxl.y, (1 - my_fpart(yend)) * xgap);
 		my_plot(p, pxl.x, pxl.y + 1, my_fpart(yend) * xgap);
 	}
-	*intery = yend + gradient;
+	ig->x = yend + ig->y;
 	return (pxl);
 }
 
@@ -107,8 +107,7 @@ void			line_wu(t_ptrs *p, t_dotd a, t_dotd b)
 {
 	t_dotd		*pxl;
 	double		x;
-	double		intery;
-	double		gradient;
+	t_dotd		ig;
 	int			steep;
 
 	pxl = (t_dotd *)malloc(sizeof(t_dotd) * 2);
@@ -116,28 +115,28 @@ void			line_wu(t_ptrs *p, t_dotd a, t_dotd b)
 	if (xxyy(p, &a, &b, steep))
 		return ;
 	if (b.x - a.x == 0)
-		gradient = 1.0;
+		ig.y = 1.0;
 	else
-		gradient = (double)(b.y - a.y) / (double)(b.x - a.x);
-	pxl[0] = handle_dot_start(p, &a, gradient, &intery, steep);
-	pxl[1] = handle_dot_end(p, &b, gradient, steep);
+		ig.y = (double)(b.y - a.y) / (double)(b.x - a.x);
+	pxl[0] = handle_dot_start(p, &a, &ig, steep);
+	pxl[1] = handle_dot_end(p, &b, ig.y, steep);
 	x = pxl[0].x;
 	if (steep)
 	{
 		while (++x < pxl[1].x)
 		{
-			my_plot(p, (int)intery, x, 1 - my_fpart(intery));
-			my_plot(p, (int)intery + 1, x, my_fpart(intery));
-			intery += gradient;
+			my_plot(p, (int)ig.x, x, 1 - my_fpart(ig.x));
+			my_plot(p, (int)ig.x + 1, x, my_fpart(ig.x));
+			ig.x += ig.y;
 		}
 	}
 	else
 	{
 		while (++x < pxl[1].x)
 		{
-			my_plot(p, x, (int)intery, 1 - my_fpart(intery));
-			my_plot(p, x, (int)intery + 1, my_fpart(intery));
-			intery += gradient;
+			my_plot(p, x, (int)ig.x, 1 - my_fpart(ig.x));
+			my_plot(p, x, (int)ig.x + 1, my_fpart(ig.x));
+			ig.x += ig.y;
 		}
 	}
 }

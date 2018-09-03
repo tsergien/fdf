@@ -9,40 +9,44 @@
 /*   Updated: 2018/08/13 18:18:13 by tsergien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 //before defence:
 // system leaks
 // flag -g from Makefile
-
 #include "../includes/fdf.h"
 
-int		deal_key(int key, void *param)
+static void		free_stuff(t_fdf *f)
 {
-	param = 0;
-	if (key == 53)
-		exit(1);
-	return (0);
+	int		i;
+
+	i = -1;
+	while (++i < f->m->rows)
+	{
+		free(f->m->m[i]);
+		free(f->m->rot_m[i]);
+	}
+	free(f->m);
+	free(f->p->img);
+	free(f->p);
 }
-/*
-** yarik super
-*/
-int		exit_x(int key, void *par)
+
+static int		exit_x(int key, void *param)
 {
-	par = NULL;
-	(void)key;// yarik super
+	(void)param;
+	(void)key;
 	exit(1);
 	return (0);
 }
 
-static void	usage()
+static int	usage()
 {
 	write(1, "Usage: ./fdf file\n", 18);
+	return (0);
 }
-// print net with 0 radians
-// look up for rotating formulas
+
 void	print_matrix_rot(t_matrix *m)
 {
 	int i = -1;
+	printf("Matrix rot\n");
 	while (++i < m->rows)
 	{
 		int j = -1;
@@ -54,6 +58,7 @@ void	print_matrix_rot(t_matrix *m)
 void	print_matrix(t_matrix *m)
 {
 	int i = -1, j = -1;
+	printf("Matrix\n");
 	printf("cols: %d, rows: %d\n", m->cols, m->rows);
 	while (++i < m->rows)
 	{
@@ -65,58 +70,69 @@ void	print_matrix(t_matrix *m)
 	}
 }
 
-
-// remake for mlx_image_put
 // fix grid
 // fix rotating
-
-int		main(int argc, char **argv)
-{
-	t_ptrs			*p;
-	int				fd;
-	t_matrix		*m;
-	t_fdf			*f;
-
-	fd = open(argv[1], O_RDONLY);
-	if (argc != 2)
-	{
-		usage();
-		return (0);
-	}
-	f = (t_fdf *)malloc(sizeof(t_fdf));
-	p = (t_ptrs *)malloc(sizeof(t_ptrs));
-	p->mlx_ptr = mlx_init();
-	p->win_ptr = mlx_new_window(p->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "FDF");
-	m = get_matrix(fd);
-	p->color = GREY_BLUE;
-	f->m = m;
-	f->p = p;
-
-	// for (int i = 0; i < WIN_WIDTH; i = i + 50)
+/* write greeting
+// for (int i = 0; i < WIN_WIDTH; i = i + 50)
 	// {
 	// 	o2.y = i;
 	// 	darken(&(p->color), 0.5);
 	// 	if (i % 500 == 0)
 	// 		p->color = 0xe059c5;
 	// 	line_wu(p, o2, o1);
-	// }
+	// }*/
+/*
+char	*mlx_get_data_addr(void *img_ptr, int *bits_per_pixel,
+			   int *size_line, int *endian);
+**  endian : 0 = sever X is little endian, 1 = big endian
+*/
+void		init_ptr(t_fdf *f)
+{
+	t_ptrs			*p;
+	int				*bits_per_pixel;
+	int				*size_line;
+	int				*endian;
 
-	t_vector angle;
-	angle.x = M_PI / 3;
-	angle.y = M_PI / 4;
-	angle.z = 0;
+	bits_per_pixel = (int *)malloc(sizeof(int));
+	size_line = (int *)malloc(sizeof(int));
+	endian = (int *)malloc(sizeof(int));
+	*bits_per_pixel = 32;
+	*size_line = WIN_WIDTH;
+	*endian = 0;
+	p = (t_ptrs *)malloc(sizeof(t_ptrs));
+	p->mlx_ptr = mlx_init();
+	p->win_ptr = mlx_new_window(p->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "FDF");
+	p->img_ptr = mlx_new_image(p->mlx_ptr,WIN_WIDTH, WIN_HEIGHT);
+	p->img = (int *)malloc(sizeof(int) * WIN_HEIGHT * WIN_WIDTH);
+	p->img = (int *)mlx_get_data_addr(p->img_ptr, bits_per_pixel, size_line, endian);
+	p->color = GREY_BLUE;
+	f->p = p;
+}
 
+int			main(int argc, char **argv)
+{
+	int				fd;
+	t_fdf			*f;
+
+	fd = open(argv[1], O_RDONLY);
+	if (argc != 2)
+		return (usage());
+	f = (t_fdf *)malloc(sizeof(t_fdf));
+	init_ptr(f);
+	printf("1__\n");
+	f->m = get_matrix(fd);
+	printf("2__\n");
+	rotate(f->m, f->m->angle);
+	printf("3__\n");
+	
 	my_draw(f);
-	f->p->color = RASPBERRY;
-	rotate(m, angle);
-	my_draw(f);
+	printf("4__\n");
 
 
-	mlx_key_hook(p->win_ptr, deal_keys, f);
-
-	mlx_hook(p->win_ptr, 2, 5, deal_key, (void *)0);//escape button
-	mlx_hook(p->win_ptr, 17, 131071, exit_x, (void *)0);//exit with x
-	mlx_loop(p->mlx_ptr);
-	// system("leaks fdf -quiet");
+	system("leaks fdf -quiet");
+	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
+	mlx_hook(f->p->win_ptr, 17, 131071, exit_x, f);
+	mlx_loop(f->p->mlx_ptr);
+	free_stuff(f);
 	return (0);
 }

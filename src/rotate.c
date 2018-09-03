@@ -12,7 +12,7 @@
 
 #include "../includes/fdf.h"
 
-void		x_axis(t_matrix *m, double a)
+static void		x_axis(t_matrix *m, double a)
 {
 	int		i;
 	int		j;
@@ -33,7 +33,7 @@ void		x_axis(t_matrix *m, double a)
 	}
 }
 
-void		y_axis(t_matrix *m, double b)
+static void		y_axis(t_matrix *m, double b)
 {
 	int		i;
 	int		j;
@@ -54,7 +54,7 @@ void		y_axis(t_matrix *m, double b)
 	}
 }
 
-void		z_axis(t_matrix *m, double g)
+static void		z_axis(t_matrix *m, double g)
 {
 	int		i;
 	int		j;
@@ -75,9 +75,27 @@ void		z_axis(t_matrix *m, double g)
 	}
 }
 
+void		rotate_to_start(t_matrix *m)
+{
+	t_vector	v;
+
+	v.x = -m->angle.x;
+	v.y = -m->angle.y;
+	v.z = -m->angle.z;
+	x_axis(m, v.x);
+	y_axis(m, v.y);
+	z_axis(m, v.z);
+	m->angle.x += v.x;
+	m->angle.y += v.y;
+	m->angle.z += v.z;
+}
+
 void		rotate(t_matrix *m, t_vector angle)
 {
 	x_axis(m, angle.x);
 	y_axis(m, angle.y);
 	z_axis(m, angle.z);
+	m->angle.x += angle.x;
+	m->angle.y += angle.y;
+	m->angle.z += angle.z;
 }

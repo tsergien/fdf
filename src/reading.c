@@ -38,7 +38,10 @@ static void			set_matrix_elem(t_matrix *m, char *line, int j)
 	char	*ptr;
 
 	c = ft_strsplit(line, ' ');
-	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * m->cols);
+	i = 0;
+	while (c[i])//
+		i++;//
+	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * m->cols);//*i
 	i = -1;
 	while (c[++i])
 	{
@@ -54,22 +57,22 @@ static void			set_matrix_elem(t_matrix *m, char *line, int j)
 		free(c[k]);
 }
 
-static void			set_rot_matrix(t_matrix **m)
+static void			set_rot_matrix(t_matrix *m)
 {
 	int			i;
 	int			j;
 
 	i = -1;
-	(*m)->rot_m = (t_vector **)malloc(sizeof(t_vector *) * (*m)->rows);
-	while (++i < (*m)->rows)
+	m->rot_m = (t_vector **)malloc(sizeof(t_vector *) * m->rows);
+	while (++i < m->rows)
 	{
 		j = -1;
-		(*m)->rot_m[i] = (t_vector *)malloc(sizeof(t_vector) * (*m)->cols);
-		while (++j < (*m)->cols)
+		m->rot_m[i] = (t_vector *)malloc(sizeof(t_vector) * m->cols);
+		while (++j < m->cols)
 		{
-			(*m)->rot_m[i][j].x = j;
-			(*m)->rot_m[i][j].y = i;
-			(*m)->rot_m[i][j].z = (*m)->m[i][j].x;
+			m->rot_m[i][j].x = j;
+			m->rot_m[i][j].y = i;
+			m->rot_m[i][j].z = m->m[i][j].x;
 		}
 	}
 }
@@ -118,6 +121,9 @@ t_matrix			*get_matrix(int fd)
 		j++;
 	}
 	m = lines_to_matrix(l, j);
-	set_rot_matrix(&m);
+	set_rot_matrix(m);
+	m->angle.x = M_PI / 10;
+	m->angle.y = M_PI / 10;
+	m->angle.z = M_PI / 10;
 	return (m);
 }

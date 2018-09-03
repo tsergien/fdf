@@ -26,7 +26,7 @@ OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
 HEADER = -I /usr/local/include -I includes/
 
-FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit -lm#-lm
+FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit -lm
 
 WWW = -Wall -Wextra -Werror #-g # -g remove
 
