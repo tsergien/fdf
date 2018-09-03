@@ -109,6 +109,36 @@ void		init_ptr(t_fdf *f)
 	f->p = p;
 }
 
+static void	greeting(t_ptrs *p)
+{
+	t_dotd	o1;
+	t_dotd	o2;
+
+	p->color = 0xe059c5;
+	o1.x = 0;
+	o1.y = 0;
+	o2.x = WIN_WIDTH;
+	for (int i = 0; i < WIN_HEIGHT; i = i + 25)
+	{
+		o2.y = i;
+		darken(&(p->color), 0.5);
+		if (i % 500 == 0)
+			p->color = 0xe059c5;
+		line_wu(p, o2, o1);
+		mlx_put_image_to_window(p->mlx_ptr, p->win_ptr, p->img_ptr, 0, 0);
+	}
+	o2.y = WIN_HEIGHT;
+	for (int i = WIN_WIDTH; i > 0; i = i - 25)
+	{
+		o2.x = i;
+		darken(&(p->color), 0.5);
+		if (i % 500 == 0)
+			p->color = 0xe059c5;
+		line_wu(p, o1, o2);
+		mlx_put_image_to_window(p->mlx_ptr, p->win_ptr, p->img_ptr, 0, 0);
+	}
+}
+
 int			main(int argc, char **argv)
 {
 	int				fd;
@@ -119,17 +149,16 @@ int			main(int argc, char **argv)
 		return (usage());
 	f = (t_fdf *)malloc(sizeof(t_fdf));
 	init_ptr(f);
+	greeting(f->p);//doesnt work
 	printf("1__\n");
 	f->m = get_matrix(fd);
-	printf("2__\n");
 	rotate(f->m, f->m->angle);
 	printf("3__\n");
-	
 	my_draw(f);
 	printf("4__\n");
 
 
-	system("leaks fdf -quiet");
+	// system("leaks fdf -quiet");
 	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
 	mlx_hook(f->p->win_ptr, 17, 131071, exit_x, f);
 	mlx_loop(f->p->mlx_ptr);

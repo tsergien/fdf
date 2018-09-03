@@ -14,11 +14,15 @@
 
 int				my_round(double x)
 {
-	return (x + 0.5);
+	return (int)(x + 0.5);
 }
-
+/*
+** fractional part
+*/
 double			my_fpart(double x)
 {
+	 if (x < 0)
+		return 1 - (x - (int)x);
 	return (x - (int)x);
 }
 

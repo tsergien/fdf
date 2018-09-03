@@ -118,6 +118,10 @@ void				my_plot(t_ptrs *p, int x, int y, double c);
 */
 void				my_draw(t_fdf *f);
 /*
+**		DRAWING
+*/
+void				clear_all(t_ptrs *p);
+/*
 **		ROTATING
 */
 void				rotate(t_matrix *m, t_vector angle);

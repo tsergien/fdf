@@ -48,7 +48,10 @@ static int		xxyy(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
 		ft_swap(&b->x, &b->y, sizeof(a->x));
 	}
 	if (b->x < a->x)
-		ft_swap(b, a, sizeof(a));
+	{
+		ft_swap(&a->y, &b->y, sizeof(a->x));
+		ft_swap(&a->x, &b->x, sizeof(a->x));
+	}
 	return (equal_coords(p, a, b, steep));
 }
 

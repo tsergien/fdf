@@ -12,6 +12,16 @@
 
 #include "../includes/fdf.h"
 
+void			clear_all(t_ptrs *p)
+{
+	int		i;
+
+	i = -1;
+	mlx_clear_window(p->mlx_ptr, p->win_ptr);
+	while (++i < WW)
+		p->img[i] = 0;
+}
+
 static void	connect_next(t_ptrs *p, t_matrix *m, int i, int j)
 {
 	t_dotd	start;
@@ -41,7 +51,9 @@ void		my_draw(t_fdf *f)
 	int		i;
 	int		j;
 
+
 	i = -1;
+	clear_all(f->p);
 	while (++i < f->m->rows)
 	{
 		j = -1;

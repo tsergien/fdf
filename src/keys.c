@@ -12,16 +12,6 @@
 
 #include "../includes/fdf.h"
 
-void			clear_all(t_ptrs *p)
-{
-	int		i;
-
-	i = -1;
-	mlx_clear_window(p->mlx_ptr, p->win_ptr);
-	while (++i < WW)
-		p->img[i] = 0;
-}
-
 static int		deal_key(int key, void *param)
 {
 	(void)param;
@@ -45,7 +35,6 @@ static int		rotate_key(int key, t_fdf *f)
 		a.z = M_PI / 20;
 	else if (key == 124)//right
 		a.z = -M_PI / 20;
-	clear_all(f->p);
 	rotate(f->m, a);
 	my_draw(f);
 	return (0);
@@ -58,7 +47,6 @@ static int	shift_key(int key, t_fdf *f)
 	int		j;
 
 	shift = f->m->scale / 5;
-	clear_all(f->p);
 	if (key == 87 || key == 88)//down
 		shift = -shift;;
 	i = -1;
@@ -82,7 +70,6 @@ static int		zooming(int key, t_fdf *f)
 	int		new_scale;
 
 	new_scale = ft_abs(f->m->scale - f->m->scale * 0.3) < 1 ? 10 : f->m->scale * 0.3;
-	clear_all(f->p);
 	if (key == 24)//+
 		f->m->scale += new_scale;
 	else if (key == 27)//-
@@ -93,7 +80,6 @@ static int		zooming(int key, t_fdf *f)
 
 static int		darken_color(t_fdf *f)
 {
-	clear_all(f->p);
 	darken(&(f->p->color), 0.4);
 	my_draw(f);
 	return (0);
@@ -101,7 +87,6 @@ static int		darken_color(t_fdf *f)
 
 static int		change_color(t_fdf *f)
 {
-	clear_all(f->p);
 	if (f->p->color == GREY_BLUE)
 		f->p->color = L_PURPLE;
 	else if (f->p->color == L_PURPLE)
@@ -141,7 +126,6 @@ static int	high_key(int key, t_fdf *f)
 	mult = 0.75;
 	if (key == 4)
 		mult = 1.25;
-	clear_all(f->p);
 	while (++i < f->m->rows)
 	{
 		j = -1;
@@ -153,10 +137,18 @@ static int	high_key(int key, t_fdf *f)
 	return (0);
 }
 
+int			gr(t_fdf *f)
+{
+	clear_all(f->p);
+	return (0);
+}
+
 int			deal_keys(int key, t_fdf *f)
 {
 	if (key == 8)
 		return (change_color(f));
+	if (key == 36)
+		return (gr(f));//doesnt work
 	else if (key >= 123 && key <= 126)
 		return (rotate_key(key, f));
 	else if (key == 24 || key == 27)
