@@ -23,18 +23,17 @@ static int		equal_coords(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
 		i = (a->y < b->y ? a->y : b->y) - 1;
 		y1 = a->y > b->y ? a->y : b->y;
 		while (++i <= y1)
-			if ((int)a->x + (int)i * WIN_WIDTH < WW)
-				p->img[(int)a->x + (int)i * WIN_WIDTH] = p->color;
+			put_pixel_to_image(p, a->x, i, p->color);
 	}
 	else if (a->y == b->y)
 	{
 		i = a->x - 1;
 		while (++i <= b->x)
 		{
-			if (steep && (int)a->y + (int)i * WIN_WIDTH < WW)
-				p->img[(int)a->y + (int)i * WIN_WIDTH] = p->color;
-			else if ((int)i + (int)a->y * WIN_WIDTH < WW)
-				p->img[(int)i + (int)a->y * WIN_WIDTH] = p->color;
+			if (steep)
+				put_pixel_to_image(p, a->y, i, p->color);
+			else
+				put_pixel_to_image(p, i, a->y, p->color);
 		}
 	}
 	return (i == -1 ? 0 : 1);
@@ -95,7 +94,7 @@ static t_dotd	handle_dot_end(t_ptrs *p, t_dotd *o, double gradient, int steep)
 	pxl.y = (int)(yend + 0.5);
 	if (steep)
 	{
-		my_plot(p,  pxl.y, pxl.x,(1 - my_fpart(yend)) * xgap);
+		my_plot(p,  pxl.y, pxl.x, (1 - my_fpart(yend)) * xgap);
 		my_plot(p, pxl.y + 1, pxl.x, my_fpart(yend) * xgap);
 	}
 	else
@@ -125,21 +124,7 @@ void			line_wu(t_ptrs *p, t_dotd a, t_dotd b)
 	pxl[1] = handle_dot_end(p, &b, ig.y, steep);
 	x = pxl[0].x;
 	if (steep)
-	{
-		while (++x < pxl[1].x)
-		{
-			my_plot(p, (int)ig.x, x, 1 - my_fpart(ig.x));
-			my_plot(p, (int)ig.x + 1, x, my_fpart(ig.x));
-			ig.x += ig.y;
-		}
-	}
+		wu_cycles_steep(p, &ig, x, pxl);
 	else
-	{
-		while (++x < pxl[1].x)
-		{
-			my_plot(p, x, (int)ig.x, 1 - my_fpart(ig.x));
-			my_plot(p, x, (int)ig.x + 1, my_fpart(ig.x));
-			ig.x += ig.y;
-		}
-	}
+		wu_cycles(p, &ig, x, pxl);
 }

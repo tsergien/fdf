@@ -48,7 +48,7 @@ static void		y_axis(t_matrix *m, double b)
 		{
 			x = m->rot_m[i][j].x;
 			z = m->rot_m[i][j].z;
-			m->rot_m[i][j].x = x * cos(b) - z * sin(b);
+			m->rot_m[i][j].x = x * cos(b) + z * sin(b);
 			m->rot_m[i][j].z = -x * sin(b) + z * cos(b);
 		}
 	}
@@ -69,8 +69,8 @@ static void		z_axis(t_matrix *m, double g)
 		{
 			x = m->rot_m[i][j].x;
 			y = m->rot_m[i][j].y;
-			m->rot_m[i][j].x = x * cos(g) + y * sin(g);
-			m->rot_m[i][j].y = -x * sin(g) + y * cos(g);
+			m->rot_m[i][j].x = x * cos(g) - y * sin(g);
+			m->rot_m[i][j].y = x * sin(g) + y * cos(g);
 		}
 	}
 }
@@ -79,15 +79,10 @@ void		rotate_to_start(t_matrix *m)
 {
 	t_vector	v;
 
-	v.x = -m->angle.x;
-	v.y = -m->angle.y;
-	v.z = -m->angle.z;
-	x_axis(m, v.x);
-	y_axis(m, v.y);
-	z_axis(m, v.z);
-	m->angle.x += v.x;
-	m->angle.y += v.y;
-	m->angle.z += v.z;
+	v.x = 0 - m->angle.x;
+	v.y = 0 - m->angle.y;
+	v.z = 0 - m->angle.z;
+	rotate(m, v);
 }
 
 void		rotate(t_matrix *m, t_vector angle)

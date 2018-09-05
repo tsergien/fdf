@@ -12,6 +12,15 @@
 
 #include "../includes/fdf.h"
 
+void			put_pixel_to_image(t_ptrs *p, int x, int y, int color)
+{
+	//check if it's in the same line
+	if (x + y * WIN_WIDTH < WW && x + y * WIN_WIDTH  > -1)
+	{
+		p->img[x + y * WIN_WIDTH] = color;
+	}
+}
+
 int				my_round(double x)
 {
 	return (int)(x + 0.5);
@@ -26,23 +35,6 @@ double			my_fpart(double x)
 	return (x - (int)x);
 }
 
-void			darken(int *col, double c)
-{
-	int		R;
-	int		G;
-	int		B;
-	int		keyFactor;
-
-	keyFactor = (double)c * 100;
-	R = *col >> 16;
-	G = (*col & 0xff00) >> 8;
-	B = *col & 0xff;
-	R = (R - R * keyFactor / 0x100) << 16;
-	G = (G - G * keyFactor / 0x100) << 8;
-	B = B - B * keyFactor / 0x100;
-	*col = R + G + B;
-}
-
 void			my_plot(t_ptrs *p, int x, int y, double c)
 {
 	int		color;
@@ -50,6 +42,5 @@ void			my_plot(t_ptrs *p, int x, int y, double c)
 	c = 1 - c;
 	color = p->color;
 	darken(&color, c);
-	if (x + WIN_WIDTH * y < WW)
-		p->img[x + WIN_WIDTH * y] = color;
+	put_pixel_to_image(p, x, y, color);
 }

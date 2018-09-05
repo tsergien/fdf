@@ -12,7 +12,8 @@
 
 NAME = fdf
 
-SRC_FILES = main.c reading.c wu_line.c grid.c wu_additional.c rotate.c keys.c
+SRC_FILES = main.c reading.c wu_line.c grid.c wu_additional.c rotate.c keys.c\
+			drawing_stuff.c errors.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 

@@ -27,14 +27,18 @@ static int		rotate_key(int key, t_fdf *f)
 	a.x = 0;
 	a.y = 0;
 	a.z = 0;
-	if (key == 126)//up
+	if (key == 126)
 		a.x = M_PI / 20;
-	else if (key == 125)//down
+	else if (key == 125)
 		a.x = -M_PI / 20;
-	else if (key == 123)//left
+	else if (key == 123)
 		a.z = M_PI / 20;
-	else if (key == 124)//right
+	else if (key == 124)
 		a.z = -M_PI / 20;
+	else if (key == 82)
+		a.y = -M_PI /20;
+	else if (key == 65)
+		a.y = M_PI / 20;
 	rotate(f->m, a);
 	my_draw(f);
 	return (0);
@@ -46,8 +50,8 @@ static int	shift_key(int key, t_fdf *f)
 	int		i;
 	int		j;
 
-	shift = f->m->scale / 5;
-	if (key == 87 || key == 88)//down
+	shift = 1;
+	if (key == 87 || key == 88)
 		shift = -shift;;
 	i = -1;
 	while (++i < f->m->rows)
@@ -67,13 +71,16 @@ static int	shift_key(int key, t_fdf *f)
 
 static int		zooming(int key, t_fdf *f)
 {
-	int		new_scale;
-
-	new_scale = ft_abs(f->m->scale - f->m->scale * 0.3) < 1 ? 10 : f->m->scale * 0.3;
-	if (key == 24)//+
-		f->m->scale += new_scale;
-	else if (key == 27)//-
-		f->m->scale -= new_scale;
+	if (key == 24)
+	{
+		if (f->m->scale + 10 < 100)
+			f->m->scale += 10;
+	}
+	else if (key == 27)
+	{
+		if (f->m->scale - 10 > 0)
+			f->m->scale -= 10;
+	}
 	my_draw(f);
 	return (0);
 }
@@ -137,19 +144,20 @@ static int	high_key(int key, t_fdf *f)
 	return (0);
 }
 
-int			gr(t_fdf *f)
-{
-	clear_all(f->p);
-	return (0);
-}
+// int			gr(t_fdf *f)
+// {
+// 	clear_all(f->p);
+// 	return (0);
+// }
+
 
 int			deal_keys(int key, t_fdf *f)
 {
 	if (key == 8)
 		return (change_color(f));
-	if (key == 36)
-		return (gr(f));//doesnt work
-	else if (key >= 123 && key <= 126)
+	// if (key == 36)
+	// 	return (gr(f));//doesnt work
+	else if ((key >= 123 && key <= 126) || key == 82 || key == 65)
 		return (rotate_key(key, f));
 	else if (key == 24 || key == 27)
 		return (zooming(key, f)); 

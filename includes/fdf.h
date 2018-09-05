@@ -33,6 +33,7 @@
 # define ORANGE 0xfc9f00
 # define RED 0xfc1500
 # define RASPBERRY 0x7f0347
+# define WHITE 0xffffff
 
 // from math.h
 // 		M_E             base of natural logarithm, e
@@ -81,7 +82,7 @@ typedef struct		s_dotd
 */
 typedef struct		s_matrix
 {
-	t_dot			**m;// coords: (z, color)
+	t_dot			**m;
 	t_vector		**rot_m;
 	int				rows;
 	int				cols;
@@ -113,6 +114,8 @@ void				darken(int *col, double c);
 int					my_round(double x);
 double				my_fpart(double x);
 void				my_plot(t_ptrs *p, int x, int y, double c);
+void				wu_cycles_steep(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl);
+void				wu_cycles(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl);
 /*
 **		GRID
 */
@@ -121,6 +124,7 @@ void				my_draw(t_fdf *f);
 **		DRAWING
 */
 void				clear_all(t_ptrs *p);
+void				put_pixel_to_image(t_ptrs *p, int x, int y, int color);
 /*
 **		ROTATING
 */
@@ -130,4 +134,8 @@ void				rotate_to_start(t_matrix *m);
 **		KEYS
 */
 int					deal_keys(int key, t_fdf *f);
+/*
+**		ERRORS
+*/
+int					error_cols();
 #endif
