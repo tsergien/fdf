@@ -88,6 +88,7 @@ typedef struct		s_matrix
 	int				cols;
 	t_vector		angle;
 	double			scale;
+	t_dot			shift;
 }					t_matrix;
 
 typedef struct		s_lines
@@ -106,6 +107,8 @@ typedef struct		s_fdf
 **		READING
 */
 t_matrix			*get_matrix(int fd);
+void				set_scale(t_matrix *m);
+void				set_vector(t_vector *v, double x, double y, double z);
 /*
 **		LINES
 */

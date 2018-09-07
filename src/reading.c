@@ -103,8 +103,6 @@ static t_matrix		*lines_to_matrix(t_lines *l, int lines)
 			return (0);
 		j++;
 	}
-	m->scale = (fmin(WIN_HEIGHT, WIN_WIDTH) - fmin(WIN_HEIGHT, WIN_WIDTH)
-				/ 8) /  fmax(m->cols, m->rows);
 	return (m);
 }
 
@@ -129,8 +127,12 @@ t_matrix			*get_matrix(int fd)
 	if (!m)
 		return (0);
 	set_rot_matrix(m);
-	m->angle.x = M_PI / 20;
-	m->angle.y = 0;
-	m->angle.z = M_PI / 20;
+	set_vector(&m->angle, 0.1, 0.01, -0.1);
+	rotate(m, m->angle);
+	set_scale(m);
+	// m->shift.x = WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale;
+	// m->shift.y = WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale;
+	m->shift.x = 0;
+	m->shift.y = 0;
 	return (m);
 }

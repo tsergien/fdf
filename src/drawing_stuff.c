@@ -48,3 +48,16 @@ void			wu_cycles_steep(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl)
 		ig->x += ig->y;
 	}
 }
+
+void			set_scale(t_matrix *m)
+{
+	m->scale = (fmin(WIN_HEIGHT, WIN_WIDTH) - fmin(WIN_HEIGHT, WIN_WIDTH)
+				/ 8) /  fmax(m->cols, m->rows);
+}
+
+void			set_vector(t_vector *v, double x, double y, double z)
+{
+	v->x = x;
+	v->y = y;
+	v->z = z;
+}

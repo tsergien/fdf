@@ -82,7 +82,7 @@ void		init_ptr(t_fdf *f)
 
 	bits_per_pixel = 32;
 	size_line = WIN_WIDTH;
-	endian = 0;
+	endian = 1;
 	p = (t_ptrs *)malloc(sizeof(t_ptrs));
 	p->mlx_ptr = mlx_init();
 	p->win_ptr = mlx_new_window(p->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "FDF");
@@ -139,12 +139,24 @@ int			main(int argc, char **argv)
 	rotate_to_start(f->m);
 	my_draw(f);
 
-
-
-	system("leaks fdf -quiet");
+	//system("leaks fdf -quiet");
+	//mlx_mouse_hook (f->win_ptr, mouse, f); mouse = int (*funct_ptr)(), 
 	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
-	mlx_hook(f->p->win_ptr, 17, 131071, exit_x, f);
+	mlx_hook(f->p->win_ptr, 17, 1L << 17, exit_x, f);
+	mlx_hook(f->p->win_ptr, 4, 1L << 17, mouse_press, f);//int mouse_press(int button, int x, int y, void *param)
+	mlx_hook(f->p->win_ptr, 5, 1L << 17, mouse_release, f);//int mouse_release(int button, int x, int y, void *param)
+	mlx_hook(f->p->win_ptr, 6, 1L << 17, mouse_move, f);//int mouse_move(int x, int y, void *param)
 	mlx_loop(f->p->mlx_ptr);
-	free_stuff(f);
+	free_stuff(f);//mb move higher
 	return (0);
 }
+/*
+Mouse button codes
+Left button — 1
+Right button —  2
+Third (Middle) button — 3
+Scroll Up — 4
+Scroll Down — 5
+Scroll Left — 6
+Scroll Right — 7
+*/
