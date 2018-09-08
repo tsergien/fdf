@@ -90,37 +90,10 @@ void		init_ptr(t_fdf *f)
 	p->img = (int *)mlx_get_data_addr(p->img_ptr, &bits_per_pixel, &size_line, &endian);
 	p->color = WHITE;
 	f->p = p;
+	f->p->limit_turn_off = 0;
+	f->mouse.press = 0;
+	set_dot(&f->mouse.pos, WIN_WIDTH / 2, WIN_HEIGHT / 2);
 }
-
-// static void	greeting(t_ptrs *p)
-// {
-// 	t_dotd	o1;
-// 	t_dotd	o2;
-
-// 	p->color = 0xe059c5;
-// 	o1.x = 0;
-// 	o1.y = 0;
-// 	o2.x = WIN_WIDTH;
-// 	for (int i = 0; i < WIN_HEIGHT; i = i + 25)
-// 	{
-// 		o2.y = i;
-// 		darken(&(p->color), 0.5);
-// 		if (i % 500 == 0)
-// 			p->color = 0xe059c5;
-// 		line_wu(p, o2, o1);
-// 		mlx_put_image_to_window(p->mlx_ptr, p->win_ptr, p->img_ptr, 0, 0);
-// 	}
-// 	o2.y = WIN_HEIGHT;
-// 	for (int i = WIN_WIDTH; i > 0; i = i - 25)
-// 	{
-// 		o2.x = i;
-// 		darken(&(p->color), 0.5);
-// 		if (i % 500 == 0)
-// 			p->color = 0xe059c5;
-// 		line_wu(p, o1, o2);
-// 		mlx_put_image_to_window(p->mlx_ptr, p->win_ptr, p->img_ptr, 0, 0);
-// 	}
-// }
 
 int			main(int argc, char **argv)
 {
@@ -132,31 +105,20 @@ int			main(int argc, char **argv)
 		return (usage(fd));
 	f = (t_fdf *)malloc(sizeof(t_fdf));
 	init_ptr(f);
-	//greeting(f->p);//doesnt work
 	f->m = get_matrix(fd);
+
 	if (!f->m)
 		return (0);
 	rotate_to_start(f->m);
 	my_draw(f);
 
-	//system("leaks fdf -quiet");
-	//mlx_mouse_hook (f->win_ptr, mouse, f); mouse = int (*funct_ptr)(), 
+	// system("leaks fdf -quiet");
 	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
 	mlx_hook(f->p->win_ptr, 17, 1L << 17, exit_x, f);
-	mlx_hook(f->p->win_ptr, 4, 1L << 17, mouse_press, f);//int mouse_press(int button, int x, int y, void *param)
-	mlx_hook(f->p->win_ptr, 5, 1L << 17, mouse_release, f);//int mouse_release(int button, int x, int y, void *param)
-	mlx_hook(f->p->win_ptr, 6, 1L << 17, mouse_move, f);//int mouse_move(int x, int y, void *param)
+	mlx_hook(f->p->win_ptr, 4, 1L << 17, mouse_press, f);
+	mlx_hook(f->p->win_ptr, 5, 1L << 17, mouse_release, f);
+	mlx_hook(f->p->win_ptr, 6, 1L << 17, mouse_move, f);
 	mlx_loop(f->p->mlx_ptr);
 	free_stuff(f);//mb move higher
 	return (0);
 }
-/*
-Mouse button codes
-Left button — 1
-Right button —  2
-Third (Middle) button — 3
-Scroll Up — 4
-Scroll Down — 5
-Scroll Left — 6
-Scroll Right — 7
-*/

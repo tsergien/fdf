@@ -47,15 +47,13 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 	while (c[++i])
 	{
 		ptr = ft_strchr(c[i], ',');
-		if (ptr && *(ptr + 1) != ' ')
-			m->m[j][i].y = ft_atoi_base((ptr + 1), 16);
-		else
-			m->m[j][i].y = 16777215;
+		m->m[j][i].y = (ptr && *(ptr + 1) != ' ') ? ft_atoi_base((ptr + 1), 16) : WHITE;
 		m->m[j][i].x = ft_atoi(c[i]);
 	}
 	i = -1;
-	while (c[++i])
+	while (++i < m->cols)
 		free(c[i]);
+	free(c);
 	return (1);
 }
 
@@ -127,12 +125,9 @@ t_matrix			*get_matrix(int fd)
 	if (!m)
 		return (0);
 	set_rot_matrix(m);
-	set_vector(&m->angle, 0.1, 0.01, -0.1);
+	set_vector(&m->angle, 0.4, 0.2, -0.1);
 	rotate(m, m->angle);
 	set_scale(m);
-	// m->shift.x = WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale;
-	// m->shift.y = WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale;
-	m->shift.x = 0;
-	m->shift.y = 0;
+	set_dot(&m->shift, 0, 0);
 	return (m);
 }

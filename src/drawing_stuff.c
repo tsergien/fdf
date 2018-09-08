@@ -49,15 +49,42 @@ void			wu_cycles_steep(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl)
 	}
 }
 
-void			set_scale(t_matrix *m)
+static void		manage_scale(t_matrix *m, t_dotd max, t_dotd min)
 {
-	m->scale = (fmin(WIN_HEIGHT, WIN_WIDTH) - fmin(WIN_HEIGHT, WIN_WIDTH)
-				/ 8) /  fmax(m->cols, m->rows);
+	t_dotd	start;
+
+	set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale,
+	WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale);
+	while (min.x * m->scale + start.x < 0 || min.y * m->scale + start.y < 0
+	|| max.x * m->scale + start.x > WIN_WIDTH - 200 || max.y * m->scale + start.y > WIN_HEIGHT - 200)
+	{
+		m->scale--;
+		set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale,
+		WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale);
+	}
 }
 
-void			set_vector(t_vector *v, double x, double y, double z)
+void			set_scale(t_matrix *m)
 {
-	v->x = x;
-	v->y = y;
-	v->z = z;
+	int		i;
+	int		j;
+	t_dotd	max;
+	t_dotd	min;
+
+	m->scale = 27;
+	i = -1;
+	set_dotd(&max, m->rot_m[0][0].x, m->rot_m[0][0].y);
+	set_dotd(&min, m->rot_m[0][0].x, m->rot_m[0][0].y);
+	while (++i < m->rows)
+	{
+		j = -1;
+		while (++j < m->cols)
+		{
+			max.x = fmax(m->rot_m[i][j].x, max.x);
+			max.y = fmax(m->rot_m[i][j].y, max.y);
+			min.x = fmin(m->rot_m[i][j].x, min.x);
+			min.y = fmin(m->rot_m[i][j].y, min.y);
+		}
+	}
+	manage_scale(m, max, min);
 }
