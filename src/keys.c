@@ -51,31 +51,30 @@ static int		darken_color(t_fdf *f)
 	return (0);
 }
 
-static int	high_key(int key, t_fdf *f)
+void			print_help(t_fdf *f)
 {
-	int			i;
-	int			j;
-	double		mult;
-	t_vector	v;
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 0, PINK, "Press H to turn on and off help");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 14, PINK, "For rotating use arrows and 0 and . on num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 28, PINK, "For move use 8, 4, 6, 2 on num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 42, PINK, "Back to center - 5 in num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 56, PINK, "For zoom use + and - or scroll.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 70, PINK, "You can also use mouse)");
+}
 
-	i = -1;
-	v = f->m->angle;
-	rotate_to_start(f->m);
-	mult = 0.95;
-	if (key == 4)
-		mult = 1.05;
-	while (++i < f->m->rows)
+int				help(t_fdf *f)
+{
+	f->p->help = f->p->help == 1 ? 0 : 1;
+	if (f->p->help)
+		print_help(f);
+	else
 	{
-		j = -1;
-		while (++j < f->m->cols)
-			f->m->rot_m[i][j].z *= mult;
+		clear_all(f->p);
+		my_draw(f);
 	}
-	rotate(f->m, v);
-	my_draw(f);
 	return (0);
 }
 
-int			deal_keys(int key, t_fdf *f)
+int				deal_keys(int key, t_fdf *f)
 {
 	if (key == 8)
 		return (change_color(f));
@@ -89,7 +88,9 @@ int			deal_keys(int key, t_fdf *f)
 		return (darken_color(f));
 	else if (key == 53)
 		return (deal_key(key, f));
-	else if (key == 4 || key == 37)
+	else if (key == 257 || key == 256)
 		return (high_key(key, f));
+	else if (key == 4)
+		return (help(f));
 	return (0);
 }

@@ -32,16 +32,18 @@ static void	connect_next(t_ptrs *p, t_matrix *m, int i, int j)
 	start.y = WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale;
 	cur.x = m->shift.x + start.x + (double)m->scale * m->rot_m[i][j].x;
 	cur.y = m->shift.y + start.y + (double)m->scale * m->rot_m[i][j].y;
+	start.x += m->shift.x;
+	start.y += m->shift.y;
 	if (j + 1 < m->cols)
 	{
-		next.x = m->shift.x + start.x + (double)m->scale * m->rot_m[i][j + 1].x;
-		next.y = m->shift.y + start.y + (double)m->scale * m->rot_m[i][j + 1].y;
+		next.x = start.x + (double)m->scale * m->rot_m[i][j + 1].x;
+		next.y = start.y + (double)m->scale * m->rot_m[i][j + 1].y;
 		line_wu(p, cur, next);
 	}
 	if (i + 1 < m->rows)
 	{
-		next.x = m->shift.x + start.x + (double)m->scale * m->rot_m[i + 1][j].x;
-		next.y = m->shift.y + start.y + (double)m->scale * m->rot_m[i + 1][j].y;
+		next.x = start.x + (double)m->scale * m->rot_m[i + 1][j].x;
+		next.y = start.y + (double)m->scale * m->rot_m[i + 1][j].y;
 		line_wu(p, cur, next);
 	}
 }
@@ -60,4 +62,6 @@ void		my_draw(t_fdf *f)
 			connect_next(f->p, f->m, i, j);
 	}
 	mlx_put_image_to_window(f->p->mlx_ptr, f->p->win_ptr, f->p->img_ptr, 0, 0);
+	if (f->p->help)
+		print_help(f);
 }

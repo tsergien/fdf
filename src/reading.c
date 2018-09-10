@@ -21,6 +21,7 @@ void				add_lines(t_lines **l, char *line)
 		(*l) = (t_lines *)malloc(sizeof(t_lines));
 		(*l)->data = ft_strdup(line);
 		(*l)->next = NULL;
+		return ;
 	}
 	tmp = *l;
 	while (tmp->next)
@@ -28,6 +29,17 @@ void				add_lines(t_lines **l, char *line)
 	tmp->next = (t_lines *)malloc(sizeof(t_lines));
 	tmp->next->data = ft_strdup(line);
 	tmp->next->next = NULL;
+}
+
+void				free_char_ar(char **c)
+{
+	int		i;
+
+	i = -1;
+	while (c[++i])
+		free(c[i]);
+	free(c[i]);
+	free(c);
 }
 
 static int			set_matrix_elem(t_matrix *m, char *line, int j)
@@ -41,7 +53,10 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 	while (c[i])
 		i++;
 	if (i != m->cols)
+	{
+		free_char_ar(c);
 		return (error_cols());
+	}
 	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * m->cols);
 	i = -1;
 	while (c[++i])
@@ -51,9 +66,7 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 		m->m[j][i].x = ft_atoi(c[i]);
 	}
 	i = -1;
-	while (++i < m->cols)
-		free(c[i]);
-	free(c);
+	free_char_ar(c);
 	return (1);
 }
 

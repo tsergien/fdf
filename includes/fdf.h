@@ -43,6 +43,7 @@ typedef struct		s_ptrs
 	int				*img;
 	int				color;
 	char			limit_turn_off;
+	char			help;
 }					t_ptrs;
 
 typedef struct		s_vector
@@ -138,6 +139,9 @@ int					shift_key(int key, t_fdf *f);
 int					mouse_press(int button, int x, int y, t_fdf *f);
 int					mouse_release(int button, int x, int y, t_fdf *f);
 int					mouse_move(int x, int y, t_fdf *f);
+int					high_key(int key, t_fdf *f);
+int					help(t_fdf *f);
+void				print_help(t_fdf *f);
 /*
 **		ERRORS
 */

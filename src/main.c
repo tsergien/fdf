@@ -93,6 +93,7 @@ void		init_ptr(t_fdf *f)
 	f->p->limit_turn_off = 0;
 	f->mouse.press = 0;
 	set_dot(&f->mouse.pos, WIN_WIDTH / 2, WIN_HEIGHT / 2);
+	f->p->help = 1;
 }
 
 int			main(int argc, char **argv)
@@ -106,13 +107,12 @@ int			main(int argc, char **argv)
 	f = (t_fdf *)malloc(sizeof(t_fdf));
 	init_ptr(f);
 	f->m = get_matrix(fd);
-
 	if (!f->m)
 		return (0);
 	rotate_to_start(f->m);
 	my_draw(f);
 
-	// system("leaks fdf -quiet");
+	// system("leaks fdf -q");
 	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
 	mlx_hook(f->p->win_ptr, 17, 1L << 17, exit_x, f);
 	mlx_hook(f->p->win_ptr, 4, 1L << 17, mouse_press, f);
