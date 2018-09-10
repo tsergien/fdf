@@ -12,7 +12,7 @@
 
 #include "../includes/fdf.h"
 
-int			error_cols()
+int			error_cols(void)
 {
 	write(2, "Wrong number of cols\n", 21);
 	return (0);

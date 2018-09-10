@@ -22,33 +22,44 @@ void			clear_all(t_ptrs *p)
 		p->img[i] = 0;
 }
 
-static void	connect_next(t_ptrs *p, t_matrix *m, int i, int j)
+static void		set_vals(t_fdf *f, t_dotd *start)
+{
+	start->x =  WIN_WIDTH / 2 - f->m->rot_m[f->m->rows / 2][f->m->cols / 2].x  * f->m->scale;
+	start->y = WIN_HEIGHT / 2 - f->m->rot_m[f->m->rows / 2][f->m->cols / 2].y * f->m->scale;
+	start->x += f->m->shift.x;
+	start->y += f->m->shift.y;
+}
+
+static void		connect_next(t_fdf *f, int i, int j)
 {
 	t_dotd	cur;
 	t_dotd	next;
 	t_dotd	start;
 
-	start.x =  WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale;
-	start.y = WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale;
-	cur.x = m->shift.x + start.x + (double)m->scale * m->rot_m[i][j].x;
-	cur.y = m->shift.y + start.y + (double)m->scale * m->rot_m[i][j].y;
-	start.x += m->shift.x;
-	start.y += m->shift.y;
-	if (j + 1 < m->cols)
+	set_vals(f, &start);
+	cur.x = start.x + (double)f->m->scale * f->m->rot_m[i][j].x;
+	cur.y = start.y + (double)f->m->scale * f->m->rot_m[i][j].y;
+	if (j + 1 < f->m->cols)
 	{
-		next.x = start.x + (double)m->scale * m->rot_m[i][j + 1].x;
-		next.y = start.y + (double)m->scale * m->rot_m[i][j + 1].y;
-		line_wu(p, cur, next);
+		f->m->grad.x = f->m->m[i][j].y == 0 ? f->p->color : f->m->m[i][j].y;
+		f->m->grad.y = f->m->m[i][j + 1].y == 0 ? f->p->color :
+		f->m->m[i][j + 1].y;
+		next.x = start.x + (double)f->m->scale * f->m->rot_m[i][j + 1].x;
+		next.y = start.y + (double)f->m->scale * f->m->rot_m[i][j + 1].y;
+		line_wu(f, cur, next);
 	}
-	if (i + 1 < m->rows)
+	if (i + 1 < f->m->rows)
 	{
-		next.x = start.x + (double)m->scale * m->rot_m[i + 1][j].x;
-		next.y = start.y + (double)m->scale * m->rot_m[i + 1][j].y;
-		line_wu(p, cur, next);
+		f->m->grad.x = f->m->m[i][j].y == 0 ? f->p->color : f->m->m[i][j].y;
+		f->m->grad.y = f->m->m[i + 1][j].y == 0 ? f->p->color :
+		f->m->m[i + 1][j].y;
+		next.x = start.x + (double)f->m->scale * f->m->rot_m[i + 1][j].x;
+		next.y = start.y + (double)f->m->scale * f->m->rot_m[i + 1][j].y;
+		line_wu(f, cur, next);
 	}
 }
 
-void		my_draw(t_fdf *f)
+void			my_draw(t_fdf *f)
 {
 	int		i;
 	int		j;
@@ -59,7 +70,7 @@ void		my_draw(t_fdf *f)
 	{
 		j = -1;
 		while (++j < f->m->cols)
-			connect_next(f->p, f->m, i, j);
+			connect_next(f, i, j);
 	}
 	mlx_put_image_to_window(f->p->mlx_ptr, f->p->win_ptr, f->p->img_ptr, 0, 0);
 	if (f->p->help)

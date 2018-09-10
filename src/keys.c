@@ -31,13 +31,13 @@ static int		rotate_key(int key, t_fdf *f)
 		a.x = M_PI / 40;
 	else if (key == 125)
 		a.x = -M_PI / 40;
-	else if (key == 123)
-		a.z = M_PI / 40;
 	else if (key == 124)
+		a.z = M_PI / 40;
+	else if (key == 123)
 		a.z = -M_PI / 40;
-	else if (key == 82)
-		a.y = -M_PI / 40;
 	else if (key == 65)
+		a.y = -M_PI / 40;
+	else if (key == 82)
 		a.y = M_PI / 40;
 	rotate(f->m, a);
 	my_draw(f);
@@ -49,16 +49,6 @@ static int		darken_color(t_fdf *f)
 	darken(&(f->p->color), 0.4);
 	my_draw(f);
 	return (0);
-}
-
-void			print_help(t_fdf *f)
-{
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 0, PINK, "Press H to turn on and off help");
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 14, PINK, "For rotating use arrows and 0 and . on num.");
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 28, PINK, "For move use 8, 4, 6, 2 on num.");
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 42, PINK, "Back to center - 5 in num.");
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 56, PINK, "For zoom use + and - or scroll.");
-	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 70, PINK, "You can also use mouse)");
 }
 
 int				help(t_fdf *f)
@@ -83,12 +73,12 @@ int				deal_keys(int key, t_fdf *f)
 	else if ((key >= 123 && key <= 126) || key == 82 || key == 65)
 		return (rotate_key(key, f));
 	else if (key == 24 || key == 27)
-		return (zooming(key, f)); 
+		return (zooming(key, f));
 	else if (key == 2)
 		return (darken_color(f));
 	else if (key == 53)
 		return (deal_key(key, f));
-	else if (key == 257 || key == 256)
+	else if (key == 12 || key == 13)
 		return (high_key(key, f));
 	else if (key == 4)
 		return (help(f));

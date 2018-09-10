@@ -16,12 +16,6 @@ void			put_pixel_to_image(t_ptrs *p, int x, int y, int color)
 {
 	if (x > -1 && y > -1 && x < WIN_WIDTH && y < WIN_HEIGHT)
 		p->img[x + y * WIN_WIDTH] = color;
-	else if (x + y * WIN_WIDTH < WW && x + y * WIN_WIDTH  > -1
-	&& p->limit_turn_off)
-	{
-		y = y - x / WIN_WIDTH;//maybe turn it off
-		p->img[x + y * WIN_WIDTH] = color;
-	}
 }
 
 int				my_round(double x)

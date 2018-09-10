@@ -75,22 +75,30 @@ static void		z_axis(t_matrix *m, double g)
 	}
 }
 
-void		rotate_to_start(t_matrix *m)
+void		rotate(t_matrix *m, t_vector v)
 {
-	t_vector	v;
-
-	v.x = 0 - m->angle.x;
-	v.y = 0 - m->angle.y;
-	v.z = 0 - m->angle.z;
-	rotate(m, v);
+	x_axis(m, v.x);
+	y_axis(m, v.y);
+	z_axis(m, v.z);
+	m->angle.x += v.x;
+	m->angle.y += v.y;
+	m->angle.z += v.z;
 }
 
-void		rotate(t_matrix *m, t_vector angle)
+void		reset_rot_matrix(t_matrix *m)
 {
-	x_axis(m, angle.x);
-	y_axis(m, angle.y);
-	z_axis(m, angle.z);
-	m->angle.x += angle.x;
-	m->angle.y += angle.y;
-	m->angle.z += angle.z;
+	int			i;
+	int			j;
+
+	i = -1;
+	while (++i < m->rows)
+	{
+		j = -1;
+		while (++j < m->cols)
+		{
+			m->rot_m[i][j].x = j;
+			m->rot_m[i][j].y = i;
+			m->rot_m[i][j].z = m->m[i][j].x * m->height;
+		}
+	}
 }

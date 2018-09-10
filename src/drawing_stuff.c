@@ -12,40 +12,41 @@
 
 #include "../includes/fdf.h"
 
-void			darken(int *col, double c)
+void			wu_cycles(t_fdf *f, t_dotd *ig, double x, t_dotd *pxl)
 {
-	int		R;
-	int		G;
-	int		B;
-	int		keyFactor;
+	int		col;
+	int		dif;
+	double	start;
 
-	keyFactor = (double)c * 100;
-	R = *col >> 16;
-	G = (*col & 0xff00) >> 8;
-	B = *col & 0xff;
-	R = (R - R * keyFactor / 0x100) << 16;
-	G = (G - G * keyFactor / 0x100) << 8;
-	B = B - B * keyFactor / 0x100;
-	*col = R + G + B;
-}
-
-void			wu_cycles(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl)
-{
+	dif = pxl[1].x - x;
+	col = f->p->color;
+	start = x;
 	while (++x < pxl[1].x)
 	{
-		my_plot(p, x, (int)ig->x, 1 - my_fpart(ig->x));
-		my_plot(p, x, (int)ig->x + 1, my_fpart(ig->x));
+		f->p->color = handle_color(f->m->grad.y, dif, x - start, f->m->grad.x);
+		my_plot(f->p, x, (int)ig->x, 1 - my_fpart(ig->x));
+		my_plot(f->p, x, (int)ig->x + 1, my_fpart(ig->x));
 		ig->x += ig->y;
+		f->p->color = col;
 	}
 }
 
-void			wu_cycles_steep(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl)
+void			wu_cycles_steep(t_fdf *f, t_dotd *ig, double x, t_dotd *pxl)
 {
+	int		col;
+	int		dif;
+	double	start;
+
+	dif = pxl[1].x - x;
+	start = x;
+	col = f->p->color;
 	while (++x < pxl[1].x)
 	{
-		my_plot(p, (int)ig->x, x, 1 - my_fpart(ig->x));
-		my_plot(p, (int)ig->x + 1, x, my_fpart(ig->x));
+		f->p->color = handle_color(f->m->grad.y, dif, x - start, f->m->grad.x);
+		my_plot(f->p, (int)ig->x, x, 1 - my_fpart(ig->x));
+		my_plot(f->p, (int)ig->x + 1, x, my_fpart(ig->x));
 		ig->x += ig->y;
+		f->p->color = col;
 	}
 }
 
@@ -53,13 +54,16 @@ static void		manage_scale(t_matrix *m, t_dotd max, t_dotd min)
 {
 	t_dotd	start;
 
-	set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale,
+	set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows
+			/ 2][m->cols / 2].x * m->scale,
 	WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale);
 	while (min.x * m->scale + start.x < 0 || min.y * m->scale + start.y < 0
-	|| max.x * m->scale + start.x > WIN_WIDTH - 200 || max.y * m->scale + start.y > WIN_HEIGHT - 200)
+		|| max.x * m->scale + start.x > WIN_WIDTH - 200 ||
+		max.y * m->scale + start.y > WIN_HEIGHT - 200)
 	{
 		m->scale--;
-		set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2][m->cols / 2].x  * m->scale,
+		set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2]
+												[m->cols / 2].x * m->scale,
 		WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale);
 	}
 }

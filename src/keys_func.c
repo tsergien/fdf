@@ -12,7 +12,23 @@
 
 #include "../includes/fdf.h"
 
-int		change_color(t_fdf *f)
+void			print_help(t_fdf *f)
+{
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 0,
+	PINK, "Press H to turn on and off help");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 14,
+	PINK, "For rotating use arrows and 0 and . on num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 28,
+	PINK, "For move use 8, 4, 6, 2 on num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 42,
+	PINK, "Back to center - 5 in num.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 56,
+	PINK, "For zoom use + and - or scroll.");
+	mlx_string_put(f->p->mlx_ptr, f->p->win_ptr, 20, 70,
+	PINK, "You can also use mouse)");
+}
+
+int				change_color(t_fdf *f)
 {
 	if (f->p->color == GREY_BLUE)
 		f->p->color = L_PURPLE;
@@ -40,7 +56,7 @@ int		change_color(t_fdf *f)
 	return (0);
 }
 
-int		zooming(int key, t_fdf *f)
+int				zooming(int key, t_fdf *f)
 {
 	double			new_scale;
 
@@ -61,7 +77,7 @@ int		zooming(int key, t_fdf *f)
 	return (0);
 }
 
-int		shift_key(int key, t_fdf *f)
+int				shift_key(int key, t_fdf *f)
 {
 	int		sh;
 	int		i;
@@ -84,31 +100,28 @@ int		shift_key(int key, t_fdf *f)
 		set_dot(&f->m->shift, 0, 0);
 	if (f->m->cols * f->m->scale < WIN_WIDTH - 100 &&
 		f->m->rows * f->m->scale < WIN_HEIGHT - 100)
-	f->p->limit_turn_off = 1;
+		f->p->limit_turn_off = 1;
 	my_draw(f);
 	f->p->limit_turn_off = 0;
 	return (0);
 }
 
-int		high_key(int key, t_fdf *f)
+int				high_key(int key, t_fdf *f)
 {
-	int			i;
-	int			j;
 	double		mult;
 	t_vector	v;
 
-	i = -1;
-	v = f->m->angle;
-	rotate_to_start(f->m);
-	mult = 0.95;
-	if (key == 257)
-		mult = 1.05;
-	while (++i < f->m->rows)
-	{
-		j = -1;
-		while (++j < f->m->cols)
-			f->m->rot_m[i][j].z *= mult;
-	}
+	set_vector(&v, f->m->angle.x, f->m->angle.y, f->m->angle.z);
+	set_vector(&f->m->angle, 0, 0, 0);
+	mult = 0.7;
+	if (key == 12)
+		mult = 1.3;
+	f->m->height *= mult;
+	if (mult > 1 && f->m->height == 0)
+		f->m->height = 0.3;
+	if (f->m->height > 50)
+		f->m->height = 50;
+	reset_rot_matrix(f->m);
 	rotate(f->m, v);
 	my_draw(f);
 	return (0);

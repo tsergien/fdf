@@ -46,33 +46,6 @@ static int	usage(int fd)
 	return (0);
 }
 
-void	print_matrix_rot(t_matrix *m)
-{
-	int i = -1;
-	printf("Matrix rot\n");
-	while (++i < m->rows)
-	{
-		int j = -1;
-		while (++j < m->cols)
-			printf("%3.0f, %3.0f, %3.0f | ", m->rot_m[i][j].x, m->rot_m[i][j].y, m->rot_m[i][j].z);
-		printf("\n");
-	}
-}
-void	print_matrix(t_matrix *m)
-{
-	int i = -1, j = -1;
-	printf("Matrix\n");
-	printf("cols: %d, rows: %d\n", m->cols, m->rows);
-	while (++i < m->rows)
-	{
-		j = -1;
-		while (++j < m->cols)
-			printf("%3d | ", m->m[i][j].x);
-			// printf("%3d,%5x | ", m->m[i][j].x, m->m[i][j].y);
-		printf("\n");
-	}
-}
-
 void		init_ptr(t_fdf *f)
 {
 	t_ptrs			*p;
@@ -109,16 +82,17 @@ int			main(int argc, char **argv)
 	f->m = get_matrix(fd);
 	if (!f->m)
 		return (0);
-	rotate_to_start(f->m);
+	rotate(f->m, f->m->angle);
+	set_vector(&f->m->angle, 0.5, 0.4, -0.1);
 	my_draw(f);
+	system("leaks fdf -q");
 
-	// system("leaks fdf -q");
 	mlx_hook(f->p->win_ptr, 2, 5, deal_keys, f);
 	mlx_hook(f->p->win_ptr, 17, 1L << 17, exit_x, f);
 	mlx_hook(f->p->win_ptr, 4, 1L << 17, mouse_press, f);
 	mlx_hook(f->p->win_ptr, 5, 1L << 17, mouse_release, f);
 	mlx_hook(f->p->win_ptr, 6, 1L << 17, mouse_move, f);
 	mlx_loop(f->p->mlx_ptr);
-	free_stuff(f);//mb move higher
+	free_stuff(f);
 	return (0);
 }

@@ -12,34 +12,7 @@
 
 #include "../includes/fdf.h"
 
-static int		equal_coords(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
-{
-	double		y1;
-	double		i;
-
-	i = -1;
-	if (a->x == b->x)
-	{
-		i = (a->y < b->y ? a->y : b->y) - 1;
-		y1 = a->y > b->y ? a->y : b->y;
-		while (++i <= y1)
-			put_pixel_to_image(p, a->x, i, p->color);
-	}
-	else if (a->y == b->y)
-	{
-		i = a->x - 1;
-		while (++i <= b->x)
-		{
-			if (steep)
-				put_pixel_to_image(p, a->y, i, p->color);
-			else
-				put_pixel_to_image(p, i, a->y, p->color);
-		}
-	}
-	return (i == -1 ? 0 : 1);
-}
-
-static int		xxyy(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
+static int		xxyy(t_fdf *f, t_dotd *a, t_dotd *b, int steep)
 {
 	if (steep)
 	{
@@ -50,8 +23,9 @@ static int		xxyy(t_ptrs *p, t_dotd *a, t_dotd *b, int steep)
 	{
 		ft_swap(&a->y, &b->y, sizeof(a->x));
 		ft_swap(&a->x, &b->x, sizeof(a->x));
+		ft_swap(&f->m->grad.x, &f->m->grad.y, sizeof(&f->m->grad.x));
 	}
-	return (equal_coords(p, a, b, steep));
+	return (0);
 }
 
 static t_dotd	handle_dot_start(t_ptrs *p, t_dotd *o, t_dotd *ig, int steep)
@@ -94,7 +68,7 @@ static t_dotd	handle_dot_end(t_ptrs *p, t_dotd *o, double gradient, int steep)
 	pxl.y = (int)(yend + 0.5);
 	if (steep)
 	{
-		my_plot(p,  pxl.y, pxl.x, (1 - my_fpart(yend)) * xgap);
+		my_plot(p, pxl.y, pxl.x, (1 - my_fpart(yend)) * xgap);
 		my_plot(p, pxl.y + 1, pxl.x, my_fpart(yend) * xgap);
 	}
 	else
@@ -105,7 +79,7 @@ static t_dotd	handle_dot_end(t_ptrs *p, t_dotd *o, double gradient, int steep)
 	return (pxl);
 }
 
-void			line_wu(t_ptrs *p, t_dotd a, t_dotd b)
+void			line_wu(t_fdf *f, t_dotd a, t_dotd b)
 {
 	t_dotd		*pxl;
 	double		x;
@@ -114,17 +88,14 @@ void			line_wu(t_ptrs *p, t_dotd a, t_dotd b)
 
 	pxl = (t_dotd *)malloc(sizeof(t_dotd) * 2);
 	steep = ft_abs(b.y - a.y) > ft_abs(b.x - a.x) ? 1 : 0;
-	if (xxyy(p, &a, &b, steep))
-		return ;
-	if (b.x - a.x == 0)
-		ig.y = 1.0;
-	else
-		ig.y = (double)(b.y - a.y) / (double)(b.x - a.x);
-	pxl[0] = handle_dot_start(p, &a, &ig, steep);
-	pxl[1] = handle_dot_end(p, &b, ig.y, steep);
+	xxyy(f, &a, &b, steep);
+	ig.y = (b.x - a.x == 0) ? 1.0 :(b.y - a.y) / (b.x - a.x);
+	pxl[0] = handle_dot_start(f->p, &a, &ig, steep);
+	pxl[1] = handle_dot_end(f->p, &b, ig.y, steep);
 	x = pxl[0].x;
 	if (steep)
-		wu_cycles_steep(p, &ig, x, pxl);
+		wu_cycles_steep(f, &ig, x, pxl);
 	else
-		wu_cycles(p, &ig, x, pxl);
+		wu_cycles(f, &ig, x, pxl);
+	free(pxl);
 }

@@ -62,7 +62,7 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 	while (c[++i])
 	{
 		ptr = ft_strchr(c[i], ',');
-		m->m[j][i].y = (ptr && *(ptr + 1) != ' ') ? ft_atoi_base((ptr + 1), 16) : WHITE;
+		m->m[j][i].y = (ptr && *(ptr + 1) != ' ') ? ft_atoi_base((ptr + 1), 16) : 0;
 		m->m[j][i].x = ft_atoi(c[i]);
 	}
 	i = -1;
@@ -138,8 +138,8 @@ t_matrix			*get_matrix(int fd)
 	if (!m)
 		return (0);
 	set_rot_matrix(m);
-	set_vector(&m->angle, 0.4, 0.2, -0.1);
-	rotate(m, m->angle);
+	set_vector(&m->angle, 0.5, 0.4, -0.1);
+	m->height = 1;
 	set_scale(m);
 	set_dot(&m->shift, 0, 0);
 	return (m);

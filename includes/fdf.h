@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef FDF_H
-#define FDF_H
+# define FDF_H
 # include "mlx.h"
 # include <unistd.h>
 # include <math.h>
@@ -76,6 +76,8 @@ typedef struct		s_matrix
 	t_vector		angle;
 	double			scale;
 	t_dot			shift;
+	double			height;
+	t_dot			grad;
 }					t_matrix;
 
 typedef struct		s_lines
@@ -105,16 +107,18 @@ void				set_scale(t_matrix *m);
 void				set_vector(t_vector *v, double x, double y, double z);
 void				set_dotd(t_dotd *a, double x, double y);
 void				set_dot(t_dot *a, int x, int y);
+void				reset_rot_matrix(t_matrix *m);
 /*
 **		LINES
 */
-void				line_wu(t_ptrs *p, t_dotd a, t_dotd b);
+void				line_wu(t_fdf *f, t_dotd a, t_dotd b);
 void				darken(int *col, double c);
 int					my_round(double x);
 double				my_fpart(double x);
 void				my_plot(t_ptrs *p, int x, int y, double c);
-void				wu_cycles_steep(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl);
-void				wu_cycles(t_ptrs *p, t_dotd *ig, double x, t_dotd *pxl);
+void				wu_cycles_steep(t_fdf *f, t_dotd *ig, double x,
+					t_dotd *pxl);
+void				wu_cycles(t_fdf*f, t_dotd *ig, double x, t_dotd *pxl);
 /*
 **		GRID
 */
@@ -124,6 +128,7 @@ void				my_draw(t_fdf *f);
 */
 void				clear_all(t_ptrs *p);
 void				put_pixel_to_image(t_ptrs *p, int x, int y, int color);
+int					handle_color(int col, int dif, int pos, int other_col);
 /*
 **		ROTATING
 */

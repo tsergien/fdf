@@ -13,7 +13,7 @@
 NAME = fdf
 
 SRC_FILES = main.c reading.c wu_line.c grid.c wu_additional.c rotate.c keys.c\
-			drawing_stuff.c errors.c mouse.c keys_func.c set_func.c
+			drawing_stuff.c errors.c mouse.c keys_func.c set_func.c rgb.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
