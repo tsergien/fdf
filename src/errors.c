@@ -12,6 +12,16 @@
 
 #include "../includes/fdf.h"
 
+void		free_char_ar(char **c, int n)
+{
+	int		i;
+
+	i = -1;
+	while (++i < n)
+		free(c[i]);
+	free(c);
+}
+
 int			error_cols(void)
 {
 	write(2, "Wrong number of cols\n", 21);

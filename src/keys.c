@@ -12,11 +12,11 @@
 
 #include "../includes/fdf.h"
 
-static int		deal_key(int key, void *param)
+static int		deal_key(int key, t_fdf *f)
 {
-	(void)param;
+	(void)f;
 	if (key == 53)
-		exit(1);
+		exit(0);
 	return (0);
 }
 
@@ -51,7 +51,7 @@ static int		darken_color(t_fdf *f)
 	return (0);
 }
 
-int				help(t_fdf *f)
+int				help_key(t_fdf *f)
 {
 	f->p->help = f->p->help == 1 ? 0 : 1;
 	if (f->p->help)
@@ -81,6 +81,6 @@ int				deal_keys(int key, t_fdf *f)
 	else if (key == 12 || key == 13)
 		return (high_key(key, f));
 	else if (key == 4)
-		return (help(f));
+		return (help_key(f));
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: tsergien <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/08/13 18:09:20 by tsergien          #+#    #+#              #
-#    Updated: 2018/08/13 18:29:19 by tsergien         ###   ########.fr        #
+#    Updated: 2018/09/10 19:34:50 by tsergien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ HEADER = -I /usr/local/include -I includes/
 
 FRAME = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit -lm
 
-WWW = -Wall -Wextra -Werror #-g # -g remove
+WWW = -Wall -Wextra -Werror
 
 LIB_DIR = libft/
 
@@ -38,11 +38,6 @@ COLOR = \x1b[38;5;62m
 RESET_COLOR = \033[0m
 
 all: $(NAME)
-
-# $(NAME):
-# 	@make -C $(LIB_DIR)
-# 	@cc $(WWW) $(SRC) -o $(NAME) $(HEADER) $(FRAME) -L $(LIB_DIR) -lft
-# 	@echo "$(COLOR)***		fdf compiled		***$(RESET_COLOR)"
 
 $(NAME): $(OBJ)
 	@make -C $(LIB_DIR)
@@ -64,6 +59,6 @@ fclean: clean
 	@echo "$(COLOR)***		crystall clean		***$(RESET_COLOR)"
 
 norm:
-	norminette $(SRC) includes/*.h 
+	@norminette $(SRC) includes/*.h 
 
 re: fclean all

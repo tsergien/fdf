@@ -14,33 +14,33 @@
 
 void			darken(int *col, double c)
 {
-	int		R;
-	int		G;
-	int		B;
-	int		keyFactor;
+	int		r_comp;
+	int		g_comp;
+	int		b_comp;
+	int		key_factor;
 
-	keyFactor = (double)c * 100;
-	R = *col >> 16;
-	G = (*col & 0xff00) >> 8;
-	B = *col & 0xff;
-	R = (R - R * keyFactor / 0x100) << 16;
-	G = (G - G * keyFactor / 0x100) << 8;
-	B = B - B * keyFactor / 0x100;
-	*col = R + G + B;
+	key_factor = (double)c * 100;
+	r_comp = *col >> 16;
+	g_comp = (*col & 0xff00) >> 8;
+	b_comp = *col & 0xff;
+	r_comp = (r_comp - r_comp * key_factor / 0x100) << 16;
+	g_comp = (g_comp - g_comp * key_factor / 0x100) << 8;
+	b_comp = b_comp - b_comp * key_factor / 0x100;
+	*col = r_comp + g_comp + b_comp;
 }
 
 int				handle_color(int col, int dif, int pos, int other_col)
 {
-	int		R;
-	int		G;
-	int		B;
+	int		r_comp;
+	int		g_comp;
+	int		b_comp;
 	double	k;
 	int		res;
 
 	k = (double)pos / dif;
-	R = k * (col >> 16) + (1 - k) * (other_col >> 16);
-	G = k * ((col & 0xff00) >> 8) + (1 - k) * ((other_col & 0xff00) >> 8);
-	B = k * (col & 0xff) + (1 - k) * (other_col & 0xff);
-	res = (R << 16) + (G << 8) + B;
+	r_comp = k * (col >> 16) + (1 - k) * (other_col >> 16);
+	g_comp = k * ((col & 0xff00) >> 8) + (1 - k) * ((other_col & 0xff00) >> 8);
+	b_comp = k * (col & 0xff) + (1 - k) * (other_col & 0xff);
+	res = (r_comp << 16) + (g_comp << 8) + b_comp;
 	return (res);
 }

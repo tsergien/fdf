@@ -31,8 +31,8 @@ void			print_help(t_fdf *f)
 int				change_color(t_fdf *f)
 {
 	if (f->p->color == GREY_BLUE)
-		f->p->color = L_PURPLE;
-	else if (f->p->color == L_PURPLE)
+		f->p->color = WHITE;
+	else if (f->p->color == WHITE)
 		f->p->color = PINK;
 	else if (f->p->color == PINK)
 		f->p->color = L_RED;
@@ -80,22 +80,12 @@ int				zooming(int key, t_fdf *f)
 int				shift_key(int key, t_fdf *f)
 {
 	int		sh;
-	int		i;
-	int		j;
 
-	sh = (key == 86 || key == 91) ? -1 : 1;
-	i = -1;
-	while (++i < f->m->rows)
-	{
-		j = -1;
-		while (++j < f->m->cols)
-		{
-			if (key == 91 || key == 84)
-				f->m->shift.y += sh;
-			else
-				f->m->shift.x += sh;
-		}
-	}
+	sh = (key == 86 || key == 91) ? -10 : 10;
+	if (key == 91 || key == 84)
+		f->m->shift.y = f->m->shift.y + sh;
+	else
+		f->m->shift.x = f->m->shift.x + sh;
 	if (key == 87)
 		set_dot(&f->m->shift, 0, 0);
 	if (f->m->cols * f->m->scale < WIN_WIDTH - 100 &&
@@ -111,8 +101,8 @@ int				high_key(int key, t_fdf *f)
 	double		mult;
 	t_vector	v;
 
-	set_vector(&v, f->m->angle.x, f->m->angle.y, f->m->angle.z);
-	set_vector(&f->m->angle, 0, 0, 0);
+	set_vector(&v, f->m->angle->x, f->m->angle->y, f->m->angle->z);
+	set_vector(f->m->angle, 0, 0, 0);
 	mult = 0.7;
 	if (key == 12)
 		mult = 1.3;

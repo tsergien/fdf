@@ -75,17 +75,17 @@ static void		z_axis(t_matrix *m, double g)
 	}
 }
 
-void		rotate(t_matrix *m, t_vector v)
+void			rotate(t_matrix *m, t_vector v)
 {
 	x_axis(m, v.x);
 	y_axis(m, v.y);
 	z_axis(m, v.z);
-	m->angle.x += v.x;
-	m->angle.y += v.y;
-	m->angle.z += v.z;
+	m->angle->x += v.x;
+	m->angle->y += v.y;
+	m->angle->z += v.z;
 }
 
-void		reset_rot_matrix(t_matrix *m)
+void			reset_rot_matrix(t_matrix *m)
 {
 	int			i;
 	int			j;

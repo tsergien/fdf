@@ -21,9 +21,7 @@
 # define WIN_WIDTH 1800
 # define WIN_HEIGHT 1100
 # define WW (WIN_HEIGHT * WIN_WIDTH)
-# include <stdio.h>//////////////
 # define GREY_BLUE 0x667793
-# define L_PURPLE 0xa17bc6
 # define PINK 0xe7a0ff
 # define L_RED 0xdb7891
 # define L_BLUE 0x8acbd1
@@ -73,7 +71,7 @@ typedef struct		s_matrix
 	t_vector		**rot_m;
 	int				rows;
 	int				cols;
-	t_vector		angle;
+	t_vector		*angle;
 	double			scale;
 	t_dot			shift;
 	double			height;
@@ -115,7 +113,7 @@ void				line_wu(t_fdf *f, t_dotd a, t_dotd b);
 void				darken(int *col, double c);
 int					my_round(double x);
 double				my_fpart(double x);
-void				my_plot(t_ptrs *p, int x, int y, double c);
+void				my_plot(t_fdf *f, int x, int y, double c);
 void				wu_cycles_steep(t_fdf *f, t_dotd *ig, double x,
 					t_dotd *pxl);
 void				wu_cycles(t_fdf*f, t_dotd *ig, double x, t_dotd *pxl);
@@ -127,13 +125,12 @@ void				my_draw(t_fdf *f);
 **		DRAWING
 */
 void				clear_all(t_ptrs *p);
-void				put_pixel_to_image(t_ptrs *p, int x, int y, int color);
+void				put_pixel_to_image(t_fdf *f, int x, int y, int color);
 int					handle_color(int col, int dif, int pos, int other_col);
 /*
 **		ROTATING
 */
 void				rotate(t_matrix *m, t_vector angle);
-void				rotate_to_start(t_matrix *m);
 /*
 **		KEYS
 */
@@ -147,8 +144,10 @@ int					mouse_move(int x, int y, t_fdf *f);
 int					high_key(int key, t_fdf *f);
 int					help(t_fdf *f);
 void				print_help(t_fdf *f);
+int					exit_x(int key, t_fdf *f);
 /*
 **		ERRORS
 */
 int					error_cols();
+void				free_char_ar(char **c, int n);
 #endif

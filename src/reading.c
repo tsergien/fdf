@@ -31,17 +31,6 @@ void				add_lines(t_lines **l, char *line)
 	tmp->next->next = NULL;
 }
 
-void				free_char_ar(char **c)
-{
-	int		i;
-
-	i = -1;
-	while (c[++i])
-		free(c[i]);
-	free(c[i]);
-	free(c);
-}
-
 static int			set_matrix_elem(t_matrix *m, char *line, int j)
 {
 	char	**c;
@@ -54,7 +43,7 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 		i++;
 	if (i != m->cols)
 	{
-		free_char_ar(c);
+		free_char_ar(c, i + 1);
 		return (error_cols());
 	}
 	m->m[j] = (t_dot *)malloc(sizeof(t_dot) * m->cols);
@@ -62,11 +51,12 @@ static int			set_matrix_elem(t_matrix *m, char *line, int j)
 	while (c[++i])
 	{
 		ptr = ft_strchr(c[i], ',');
-		m->m[j][i].y = (ptr && *(ptr + 1) != ' ') ? ft_atoi_base((ptr + 1), 16) : 0;
+		m->m[j][i].y = (ptr && *(ptr + 1) != ' ') ?
+						ft_atoi_base((ptr + 1), 16) : 0;
 		m->m[j][i].x = ft_atoi(c[i]);
 	}
 	i = -1;
-	free_char_ar(c);
+	free_char_ar(c, m->cols + 1);
 	return (1);
 }
 
@@ -96,7 +86,9 @@ static t_matrix		*lines_to_matrix(t_lines *l, int lines)
 	int			j;
 	t_lines		*tmp;
 	int			success;
-	
+
+	if (!l)
+		return (0);
 	m = (t_matrix *)malloc(sizeof(t_matrix));
 	m->rows = lines;
 	if (l)
@@ -128,7 +120,7 @@ t_matrix			*get_matrix(int fd)
 	l = NULL;
 	while (get_next_line(fd, &line) > 0)
 	{
-		if (ft_strlen(line) == 0)// or check if this line is valid at all
+		if (ft_strlen(line) == 0)
 			break ;
 		add_lines(&l, line);
 		free(line);
@@ -138,7 +130,8 @@ t_matrix			*get_matrix(int fd)
 	if (!m)
 		return (0);
 	set_rot_matrix(m);
-	set_vector(&m->angle, 0.5, 0.4, -0.1);
+	m->angle = (t_vector *)malloc(sizeof(t_vector));
+	set_vector(m->angle, 0.5, 0.4, -0.1);
 	m->height = 1;
 	set_scale(m);
 	set_dot(&m->shift, 0, 0);

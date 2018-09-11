@@ -24,8 +24,10 @@ void			clear_all(t_ptrs *p)
 
 static void		set_vals(t_fdf *f, t_dotd *start)
 {
-	start->x =  WIN_WIDTH / 2 - f->m->rot_m[f->m->rows / 2][f->m->cols / 2].x  * f->m->scale;
-	start->y = WIN_HEIGHT / 2 - f->m->rot_m[f->m->rows / 2][f->m->cols / 2].y * f->m->scale;
+	start->x = WIN_WIDTH / 2 - f->m->rot_m[f->m->rows / 2]
+				[f->m->cols / 2].x * f->m->scale;
+	start->y = WIN_HEIGHT / 2 - f->m->rot_m[f->m->rows / 2]
+				[f->m->cols / 2].y * f->m->scale;
 	start->x += f->m->shift.x;
 	start->y += f->m->shift.y;
 }
@@ -37,15 +39,15 @@ static void		connect_next(t_fdf *f, int i, int j)
 	t_dotd	start;
 
 	set_vals(f, &start);
-	cur.x = start.x + (double)f->m->scale * f->m->rot_m[i][j].x;
-	cur.y = start.y + (double)f->m->scale * f->m->rot_m[i][j].y;
+	cur.x = start.x + f->m->scale * f->m->rot_m[i][j].x;
+	cur.y = start.y + f->m->scale * f->m->rot_m[i][j].y;
 	if (j + 1 < f->m->cols)
 	{
 		f->m->grad.x = f->m->m[i][j].y == 0 ? f->p->color : f->m->m[i][j].y;
 		f->m->grad.y = f->m->m[i][j + 1].y == 0 ? f->p->color :
 		f->m->m[i][j + 1].y;
-		next.x = start.x + (double)f->m->scale * f->m->rot_m[i][j + 1].x;
-		next.y = start.y + (double)f->m->scale * f->m->rot_m[i][j + 1].y;
+		next.x = start.x + f->m->scale * f->m->rot_m[i][j + 1].x;
+		next.y = start.y + f->m->scale * f->m->rot_m[i][j + 1].y;
 		line_wu(f, cur, next);
 	}
 	if (i + 1 < f->m->rows)
@@ -53,8 +55,8 @@ static void		connect_next(t_fdf *f, int i, int j)
 		f->m->grad.x = f->m->m[i][j].y == 0 ? f->p->color : f->m->m[i][j].y;
 		f->m->grad.y = f->m->m[i + 1][j].y == 0 ? f->p->color :
 		f->m->m[i + 1][j].y;
-		next.x = start.x + (double)f->m->scale * f->m->rot_m[i + 1][j].x;
-		next.y = start.y + (double)f->m->scale * f->m->rot_m[i + 1][j].y;
+		next.x = start.x + f->m->scale * f->m->rot_m[i + 1][j].x;
+		next.y = start.y + f->m->scale * f->m->rot_m[i + 1][j].y;
 		line_wu(f, cur, next);
 	}
 }
