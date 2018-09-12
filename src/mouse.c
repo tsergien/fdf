@@ -37,6 +37,11 @@ int		mouse_press(int button, int x, int y, t_fdf *f)
 		set_dot(&f->mouse.pos, x, y);
 		f->mouse.press = 1;
 	}
+	else if (button == 2)
+	{
+		set_dot(&f->mouse.pos, x, y);
+		f->mouse.press = 2;
+	}
 	return (0);
 }
 
@@ -44,7 +49,7 @@ int		mouse_release(int button, int x, int y, t_fdf *f)
 {
 	x = y;
 	(void)f;
-	if (button == 1)
+	if (button == 1 || button == 2)
 		f->mouse.press = 0;
 	return (0);
 }
@@ -55,13 +60,13 @@ int		mouse_move(int x, int y, t_fdf *f)
 
 	if (f->mouse.press == 2)
 		f->p->color++;
-	else if (f->mouse.press == 1)
+	if (f->mouse.press == 1 || f->mouse.press == 2)
 	{
-		f->mouse.press = 2;
+		f->mouse.press = 3;
 		set_dot(&f->mouse.pos, x, y);
 		return (0);
 	}
-	else
+	else if (f->mouse.press == 0)
 		return (0);
 	if (f->mouse.pos.x == x && f->mouse.pos.y == y)
 		return (0);

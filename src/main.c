@@ -70,13 +70,13 @@ int				main(int argc, char **argv)
 		return (0);
 	rotate(f->m, *f->m->angle);
 	set_vector(f->m->angle, 0.5, 0.4, -0.1);
+	set_scale(f->m);
 	my_draw(f);
 	mlx_hook(f->p->win_ptr, 4, 1L << 2, mouse_press, f);
 	mlx_hook(f->p->win_ptr, 5, 1L << 3, mouse_release, f);
 	mlx_hook(f->p->win_ptr, 6, 1L << 13, mouse_move, f);
 	mlx_hook(f->p->win_ptr, 2, 1L << 0, deal_keys, f);
 	mlx_hook(f->p->win_ptr, 17, 1L << 17, exit_x, f);
-	system("leaks fdf -q");////////////////////
 	mlx_loop(f->p->mlx_ptr);
 	return (0);
 }

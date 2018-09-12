@@ -14,7 +14,7 @@
 
 int			separator(char c)
 {
-	if (c == ' ' || c == '\n' || 
+	if (c == ' ' || c == '\n' ||
 	(c >= 9 && c <= 13) || c == '\0')
 		return (1);
 	return (0);

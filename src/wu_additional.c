@@ -12,22 +12,25 @@
 
 #include "../includes/fdf.h"
 
+/*
+**	else if (x + y * WIN_WIDTH < WW && f->p->limit_turn_off)
+**	{
+**		f->m->shift.x %= WIN_WIDTH;
+**		f->m->shift.y %= WIN_HEIGHT;
+**		if (y < 0)
+**			y = WIN_HEIGHT + y;
+**		else if (y >= WIN_HEIGHT)
+**			y = y - WIN_HEIGHT;
+**		if (x < 0 || x >= WIN_WIDTH)
+**			y = y - 1;
+**		f->p->img[x + y * WIN_WIDTH] = color;
+**	}
+*/
+
 void			put_pixel_to_image(t_fdf *f, int x, int y, int color)
 {
 	if (x > -1 && y > -1 && x < WIN_WIDTH && y < WIN_HEIGHT)
 		f->p->img[x + y * WIN_WIDTH] = color;
-	else if (x + y * WIN_WIDTH < WW && f->p->limit_turn_off)
-	{
-		f->m->shift.x %= WIN_WIDTH;
-		f->m->shift.y %= WIN_HEIGHT;
-		if (y < 0)
-			y = WIN_HEIGHT + y;
-		else if (y >= WIN_HEIGHT)
-			y = y - WIN_HEIGHT;
-		if (x < 0 || x >= WIN_WIDTH)
-			y = y - 1;
-		f->p->img[x + y * WIN_WIDTH] = color;
-	}
 }
 
 int				my_round(double x)

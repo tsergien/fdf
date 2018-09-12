@@ -55,11 +55,12 @@ static void		manage_scale(t_matrix *m, t_dotd max, t_dotd min)
 	t_dotd	start;
 
 	set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows
-			/ 2][m->cols / 2].x * m->scale,
-	WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale);
-	while (min.x * m->scale + start.x < 0 || min.y * m->scale + start.y < 0
-		|| max.x * m->scale + start.x > WIN_WIDTH ||
-		max.y * m->scale + start.y > WIN_HEIGHT)
+			/ 2][m->cols / 2].x * m->scale + m->shift.x,
+	WIN_HEIGHT / 2 - m->rot_m[m->rows / 2][m->cols / 2].y * m->scale
+	+ m->shift.y);
+	while (max.y * m->scale + start.y >= WIN_HEIGHT ||
+	max.x * m->scale + start.x >= WIN_WIDTH ||
+	min.x * m->scale + start.x < 0 || min.y * m->scale + start.y < 0)
 	{
 		m->scale--;
 		set_dotd(&start, WIN_WIDTH / 2 - m->rot_m[m->rows / 2]

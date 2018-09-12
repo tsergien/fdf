@@ -133,7 +133,6 @@ t_matrix			*get_matrix(int fd)
 	m->angle = (t_vector *)malloc(sizeof(t_vector));
 	set_vector(m->angle, 0.5, 0.4, -0.1);
 	m->height = 1;
-	set_scale(m);
 	set_dot(&m->shift, 0, 0);
 	return (m);
 }
